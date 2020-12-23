@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  keepalived-rpmbuild:
+    image: keepalived-rpmbuild
+    build:
+      context: .
+      args:
+        - http_proxy
+        - https_proxy
+    environment:
+      - http_proxy
+      - https_proxy
+    volumes:
+      - ../target:/target

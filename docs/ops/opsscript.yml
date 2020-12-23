@@ -1,0 +1,13 @@
+environment:
+  LANG: ja_JP.UTF-8
+  # Block Scalar Folded Style (>) では項目間のスペースが原因でうまく PATH が認識されない
+  PATH: "\
+    C:/Program Files/Git/mingw64/bin;\
+    C:/Program Files/Git/usr/bin;\
+    C:/Program Files/Git/bin;\
+  "
+  DISPLAY: dummy:0
+  ORIGINAL_SSH_ASKPASS: C:/Program Files/Git/mingw64/libexec/git-core/git-gui--askpass
+  SSH_ASKPASS: ${BASE_PATH}/../../ops-tools/bin/ssh-askpass-persistence.sh
+
+variables:

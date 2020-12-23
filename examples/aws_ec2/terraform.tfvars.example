@@ -1,0 +1,45 @@
+
+# [必須] AWS アクセスキー ID
+//aws_access_key = "AKIAxxxxxxxxxxxxxxxxxxxxxxx"
+
+# [必須] AWS アクセスキー Secret
+//aws_secret_key = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# [必須] リソースの命名に含めるプレフィックス。誰が作ったリソースか識別するのに利用する
+//name_prefix = "lerna-user1"
+
+# [必須] セキュリティグループの ID
+//aws_vpc_security_group_id = "sg-xxxxxxxxxxxxxxxxx"
+
+# [必須] サブネットの ID
+//aws_vpc_subnet_id = "subnet-xxxxxxxxxxxxxxxxx"
+
+# [必須] 仮想 IP を付与するルートテーブル
+//aws_vpc_route_table_id_for_virtual_ips = "rtb-xxxxxxxxxxxxxxxxx"
+
+# [必須] HTTP プロキシのホスト名/IP
+//http_proxy_host = "xxx.xxx.xxx.xxx"
+
+# [必須] アプリケーションの RPM ファイルの絶対パス
+//app_rpm_path = "./resources/lerna-sample-payment-app-1.0.0-1.noarch.rpm"
+
+# [必須] Keepalived サーバーの Private IP リスト
+//keepalived_private_ips = []
+
+# [必須] HAProxy サーバーの Private IP リスト
+//haproxy_private_ips = []
+
+# [必須] Application サーバーの Private IP リスト
+//app_private_ips = []
+
+# [必須] Cassandra サーバーの Private IP リスト
+//cassandra_private_ips = []
+
+# [必須] MariaDB サーバーの Private IP リスト
+//mariadb_private_ips = []
+
+# Gatling サーバーの Private IP リスト
+//gatling_private_ips = []
+
+# [必須] Keepalived が付与する仮想 IP（サブネットの範囲外の IP を指定）
+//keepalived_virtual_ips = ["192.168.100.100"]

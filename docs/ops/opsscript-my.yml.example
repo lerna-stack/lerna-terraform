@@ -1,0 +1,7 @@
+# 本ファイルをコピーして opsscript-<id>.yml を作成してください
+# <id>: 任意の文字列
+#
+variables:
+  workspace: nutanix_dev
+  dev:
+    ssh_user_name: knegoro

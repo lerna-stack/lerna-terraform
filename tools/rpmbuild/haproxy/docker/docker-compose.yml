@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  haproxy-rpmbuild:
+    image: haproxy-rpmbuild
+    build:
+      context: .
+      args:
+        - http_proxy
+        - https_proxy
+    environment:
+      - http_proxy
+      - https_proxy
+    volumes:
+      - ./haproxy.spec:/haproxy.spec:ro
+      - ../target:/target

@@ -1,0 +1,9 @@
+
+# [必須] AWS Access Key
+//aws_access_key = "AKIAxxxxxxxxxxxxxxxxxxxxxxx"
+
+# [必須] AWS Secret Key
+//aws_secret_key = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# [必須] A file path of SSH Public Key
+//ssh_public_key_filepath = "./assets/id_rsa.pub"
