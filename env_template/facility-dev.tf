@@ -1,5 +1,5 @@
 module "dev" {
-  source = "../modules/service/centos/dev"
+  source = "github.com/lerna-stack/lerna-terraform//modules/service/centos/dev?ref=main"
 
   # [必須] HAProxy の SSH 用ホストリスト（HAProxy のインストール先）
   //haproxy_ssh_hosts = ["10.10.10.2"]

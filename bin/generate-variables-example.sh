@@ -52,8 +52,8 @@ function print_module_example {
   local variables_file="$1"
   local module_dir="$(dirname "${variables_file}")"
   local module_name="$(basename "${module_dir}")"
-  local module_base="../"
-  local revision_ref=""
+  local module_base="github.com/lerna-stack/lerna-terraform//"
+  local revision_ref="?ref=main" # TODO: use version tag
 
     cat - << EOF | terraform fmt - | comment_out_module_vars
     module "${module_name//-/_}" {

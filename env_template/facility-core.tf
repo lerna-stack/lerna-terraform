@@ -1,5 +1,5 @@
 module "core" {
-  source = "../modules/service/centos/core"
+  source = "github.com/lerna-stack/lerna-terraform//modules/service/centos/core?ref=main"
 
   # 有効にするテナント
   //active_tenants = ["default"]
