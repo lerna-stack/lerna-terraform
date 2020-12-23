@@ -53,10 +53,11 @@ function print_module_example {
   local module_dir="$(dirname "${variables_file}")"
   local module_name="$(basename "${module_dir}")"
   local module_base="../"
+  local revision_ref=""
 
     cat - << EOF | terraform fmt - | comment_out_module_vars
     module "${module_name//-/_}" {
-      source = "${module_base}${module_dir}"
+      source = "${module_base}${module_dir}${revision_ref}"
       $(construct_example "${variables_file}")
     }
 EOF
