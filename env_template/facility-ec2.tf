@@ -1,5 +1,5 @@
 module "ec2" {
-  source = "../modules/platform/aws/ec2"
+  source = "github.com/lerna-stack/lerna-terraform//modules/platform/aws/ec2?ref=main"
 
   # [必須] AWS アクセスキー ID
   //aws_access_key = "AKIAxxxxxxxxxxxxxxxxxxxxxxx"
