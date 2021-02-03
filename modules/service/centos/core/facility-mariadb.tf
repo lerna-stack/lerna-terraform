@@ -49,8 +49,8 @@ data "template_file" "mariadb_repo" {
   template = <<-EOF
   [mariadb]
   name = MariaDB-10.5.4
-  baseurl=https://yum.mariadb.org/10.5.4/centos8-amd64
-  # alternative: baseurl=http://archive.mariadb.org/mariadb-10.5.4/yum/centos8-amd64
+  # OLD baseurl=https://yum.mariadb.org/10.5.4/centos8-amd64
+  baseurl=http://archive.mariadb.org/mariadb-10.5.4/yum/centos8-amd64
   gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
   gpgcheck=1
   EOF
