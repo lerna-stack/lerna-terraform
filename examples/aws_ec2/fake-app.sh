@@ -6,7 +6,7 @@ socat -v -v tcp4-listen:9001,reuseaddr,fork,crlf system:'
   echo "Content-Type: text/plain"
   echo "Date: $(date)"
   echo "Server: ${SOCAT_SOCKADDR}:${SOCAT_SOCKPORT}"
-  echo "Client: ${SOCAT_PEERADDR}:${SOCAT_PEER_PORT}"
+  echo "Client: ${SOCAT_PEERADDR}:${SOCAT_PEERPORT}"
   echo "Connection: close"
   echo
   echo "HELLO"
