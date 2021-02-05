@@ -1,3 +1,27 @@
+locals {
+  dist_name = var.use_rhel ? "rhel7" : "centos8"
+  dist_conf = {
+    // CentOS Linux 8 x86_64
+    centos8 = {
+      ami       = "ami-089a156ea4f52a0a3"
+      ssh_user  = "centos"
+      cx_large  = "c5.large"
+      rx_large  = "r5.large"
+      rx_xlarge = "r5.xlarge"
+    }
+    // RedHat Enterprise Linux 7.2 x86_64
+    // RHEL7 を使う場合には追加の料金を払う必要があるため注意してください。
+    // https://aws.amazon.com/marketplace/pp/B019NS7T5I?qid=1612505340203&sr=0-2&ref_=srh_res_product_title
+    rhel7 = {
+      ami       = "ami-0dd8f963"
+      ssh_user  = "ec2-user"
+      cx_large  = "c4.large"
+      rx_large  = "r3.large"
+      rx_xlarge = "r3.xlarge"
+    }
+  }
+}
+
 module "lerna_stack_platform_aws_ec2" {
   source = "../../modules/platform/aws/ec2"
 
@@ -7,8 +31,8 @@ module "lerna_stack_platform_aws_ec2" {
   # [必須] AWS API Secret Key 変数設定
   aws_secret_key = var.aws_secret_key
 
-  # Amazon マシンイメージ（AMI）（デフォルト：CentOS Linux 8 x86_64）
-  //aws_ami = "ami-089a156ea4f52a0a3"
+  # Amazon マシンイメージ（AMI）
+  aws_ami = local.dist_conf[local.dist_name]["ami"]
 
   # [必須] セキュリティグループのID
   aws_vpc_security_group_id = var.aws_vpc_security_group_id
@@ -32,7 +56,7 @@ module "lerna_stack_platform_aws_ec2" {
   //keepalived_vrrp_network_interface = "eth0"
 
   # SSH で利用するユーザー（設定する名前は AMI に依存）
-  //ssh_user = "centos"
+  ssh_user = local.dist_conf[local.dist_name]["ssh_user"]
 
   # SSH 公開鍵のパス
   //ssh_public_key = "~/.ssh/id_rsa.pub"
@@ -44,22 +68,22 @@ module "lerna_stack_platform_aws_ec2" {
   name_prefix = var.name_prefix
 
   # Keepalived サーバーのインスタンスタイプ
-  //keepalived_instance_type = "c5.large"
+  keepalived_instance_type = local.dist_conf[local.dist_name]["cx_large"]
 
   # HAProxy サーバーのインスタンスタイプ
-  //haproxy_instance_type = "c5.large"
+  haproxy_instance_type = local.dist_conf[local.dist_name]["cx_large"]
 
   # アプリケーションサーバーのインスタンスタイプ
-  //app_instance_type = "r5.large"
+  app_instance_type = local.dist_conf[local.dist_name]["rx_large"]
 
   # Cassandra サーバーのインスタンスタイプ
-  //cassandra_instance_type = "r5.xlarge"
+  cassandra_instance_type = local.dist_conf[local.dist_name]["rx_xlarge"]
 
   # MariaDB サーバーのインスタンスタイプ
-  //mariadb_instance_type = "r5.large"
+  mariadb_instance_type = local.dist_conf[local.dist_name]["rx_large"]
 
   # Gatlingホストのインスタンスタイプ
-  //gatling_instance_type = "r5.large"
+  gatling_instance_type = local.dist_conf[local.dist_name]["rx_large"]
 
   # Keepalived サーバーの ディスク容量
   //keepalived_volume_size_gb = 16

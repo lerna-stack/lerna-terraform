@@ -34,6 +34,12 @@ variable "http_proxy_host" {
   # example = "xxx.xxx.xxx.xxx"
 }
 
+variable "use_rhel" {
+  description = "RedHat Enterprise Linux を使用するかどうか (有効化すると追加料金が発生する)"
+  type        = bool
+  default     = false
+}
+
 variable "app_rpm_path" {
   description = "アプリケーションの RPM ファイルの絶対パス"
   # example = "./resources/lerna-sample-payment-app-1.0.0-1.noarch.rpm"
