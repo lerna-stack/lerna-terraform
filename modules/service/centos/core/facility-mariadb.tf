@@ -24,9 +24,16 @@ resource "null_resource" "mariadb" {
       #  Problem: cannot install the best candidate for the job
       #    nothing provides socat needed by galera-4-26.4.5-1.el8.x86_64
       sudo --askpass -E yum install -y socat
+
       # --disablerepo=appstream を指定して、MariaDB がインストールできない問題を回避
       # https://forums.centos.org/viewtopic.php?t=71881#post_content302560
-      sudo --askpass -E yum install -y --disablerepo=appstream MariaDB-server galera-4 MariaDB-client MariaDB-backup MariaDB-common
+      # CentOS かつ appstream のリポジトリファイルがある場合にのみ無効にするためにファイルの有無をチェックする
+      if [[ -f /etc/yum.repos.d/CentOS-Linux-AppStream.repo ]]; then
+        readonly YUM_OPTS="--disablerepo=appstream"
+      else
+        readonly YUM_OPTS=""
+      fi
+      sudo --askpass -E yum install -y $YUM_OPTS MariaDB-server galera-4 MariaDB-client MariaDB-backup MariaDB-common
 
       : Enable MariaDB Service
       sudo --askpass systemctl enable mariadb
