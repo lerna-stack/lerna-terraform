@@ -145,6 +145,9 @@ module "core" {
   # [必須] Cassandra のテナントごとのキースペース
   //cassandra_keyspaces = { default = ["akka"] }
 
+  # MariaDBのyumリポジトリに使うディストリビューション名
+  //mariadb_yum_repository_distribution_name = "centos8"
+
   # [必須] MariaDB の SSH 用ホストリスト（MariaDB のインストール先）
   //mariadb_ssh_hosts = []
 

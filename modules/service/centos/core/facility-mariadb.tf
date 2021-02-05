@@ -1,13 +1,17 @@
+locals {
+  mariadb_repo_file = file("${path.module}/resources/mariadb/mariadb_${var.mariadb_yum_repository_distribution_name}.repo")
+}
+
 resource "null_resource" "mariadb" {
   depends_on = [null_resource.management_script_global]
   count      = length(var.mariadb_ssh_hosts)
 
   triggers = {
-    mariadb_repo = md5(data.template_file.mariadb_repo.rendered)
+    mariadb_repo = md5(local.mariadb_repo_file)
   }
 
   provisioner "file" {
-    content     = data.template_file.mariadb_repo.rendered
+    content     = local.mariadb_repo_file
     destination = "/tmp/MariaDB.repo"
   }
 
@@ -50,17 +54,6 @@ resource "null_resource" "mariadb" {
     private_key = var.ssh_private_key != null ? file(var.ssh_private_key) : null
     password    = var.ssh_passwords != null ? var.ssh_passwords[var.ssh_users[var.mariadb_ssh_hosts[count.index]]] : null
   }
-}
-
-data "template_file" "mariadb_repo" {
-  template = <<-EOF
-  [mariadb]
-  name = MariaDB-10.5.4
-  # OLD baseurl=https://yum.mariadb.org/10.5.4/centos8-amd64
-  baseurl=http://archive.mariadb.org/mariadb-10.5.4/yum/centos8-amd64
-  gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
-  gpgcheck=1
-  EOF
 }
 
 resource "null_resource" "mariadb_config" {
