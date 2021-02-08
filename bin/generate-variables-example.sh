@@ -57,7 +57,7 @@ function print_module_example {
   local module_base="github.com/lerna-stack/lerna-terraform//"
   local revision_ref="?ref=v1.0.0"
 
-    cat - << EOF | terraform fmt - | comment_out_module_vars
+  cat - << EOF | terraform fmt - | comment_out_module_vars
     module "${module_name//-/_}" {
       source = "${module_base}${module_dir}${revision_ref}"
       $(construct_example "${variables_file}")
@@ -105,8 +105,7 @@ function generate_tfvars {
 function construct_example {
   local variables_file="$1"
 
-  cat "${variables_file}" | terraform fmt - \
-      | gawk '
+  cat "${variables_file}" | terraform fmt - | gawk '
         match($0, /^variable *"(.+)" *{$/, m) {
           variable_name = m[1]
         }
