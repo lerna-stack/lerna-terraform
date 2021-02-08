@@ -27,10 +27,6 @@ jobs:
       with:
         terraform_version: 0.14.3
 
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
-    - name: Terraform Init
-      run: terraform init
-
     # Checks that all Terraform configuration files, variables, and variable examples are properly formatted.
     - name: Check Format
       run: ./bin/check.sh
