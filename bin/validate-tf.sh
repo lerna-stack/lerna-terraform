@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -eux
+
 if [ $# -ne 1 ]; then
   echo "Argument is missing. Please set 1 argument(target dir)."
   exit 1

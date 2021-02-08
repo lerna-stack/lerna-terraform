@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -eux
+
 script_name="$(basename $0)"
 
 readonly env_template_dir='env_template'
