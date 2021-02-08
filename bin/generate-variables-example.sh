@@ -65,7 +65,7 @@ EOF
 }
 
 function comment_out_module_vars {
-  awk '
+  gawk '
     {
       if (match($0, /^(  )([^#].+)/, m) && !match(m[2], /^source =/)) {
         print m[1] "//" m[2]
@@ -104,7 +104,7 @@ function construct_example {
   local variables_file="$1"
 
   cat "${variables_file}" | terraform fmt - \
-      | awk '
+      | gawk '
         match($0, /^variable *"(.+)" *{$/, m) {
           variable_name = m[1]
         }
