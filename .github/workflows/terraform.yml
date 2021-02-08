@@ -31,6 +31,6 @@ jobs:
     - name: Terraform Init
       run: terraform init
 
-    # Checks that all Terraform configuration files adhere to a canonical format
-    - name: Terraform Format
-      run: terraform fmt -check -recursive
+    # Checks that all Terraform configuration files, variables, and variable examples are properly formatted.
+    - name: Check Format
+      run: ./bin/check.sh
