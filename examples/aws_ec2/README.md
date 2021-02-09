@@ -11,7 +11,10 @@
 #### アプリ
 デプロイするRPMファイルをビルドしてください。
 
-※デプロイ対象のアプリがまだ無い場合は、Lerna のサンプルアプリ [lerna-sample-payment-app] の RPM ファイルを [ビルド](https://github.com/lerna-stack/lerna-sample-payment-app/blob/main/docs/%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E3%83%93%E3%83%AB%E3%83%89%E3%82%AC%E3%82%A4%E3%83%89.md) してください。
+※デプロイ対象のアプリがまだ無い場合は、Lerna のサンプルアプリ [lerna-sample-payment-app] の RPM ファイルを [ビルド](https://github.com/lerna-stack/lerna-sample-payment-app/blob/main/docs/RPMパッケージビルドガイド.md) してください。  
+[lerna-sample-payment-app] を利用する場合には、環境構築をする際に追加でいくつかの作業が必要です。  
+[lerna-sample-payment-app をデプロイする方法](README_lerna-sample-payment-app.md)をご覧ください。
+
 
 ### ミドルウェア (Cassandra)
 https://archive.apache.org/dist/cassandra/redhat/311x/ から `cassandra-3.11.4-1.noarch.rpm` をダウンロードしてください。
@@ -162,3 +165,5 @@ MariaDB [(none)]> SHOW GLOBAL STATUS LIKE 'wsrep_cluster%';
 +----------------------------+--------------------------------------+
 6 rows in set (0.000 sec)
 ```
+
+[lerna-sample-payment-app]: https://github.com/lerna-stack/lerna-sample-payment-app

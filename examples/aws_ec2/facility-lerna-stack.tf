@@ -18,7 +18,7 @@ module "lerna_stack_service_redhat_core" {
   source = "../../modules/service/redhat/core"
 
   # 有効にするテナント
-  //active_tenants = ["default"]
+  active_tenants = ["example"]
 
   # ホストごとの SSH のユーザー
   ssh_users = zipmap(local.all_instance_ips, [for i in local.all_instance_ips : module.lerna_stack_platform_aws_ec2.ssh_user])
@@ -45,10 +45,10 @@ module "lerna_stack_service_redhat_core" {
   keepalived_cluster_hosts = module.lerna_stack_platform_aws_ec2.keepalived_instance_ips
 
   # [必須] Keepalived の仮想 IP
-  keepalived_virtual_ips = { default = module.lerna_stack_platform_aws_ec2.keepalived_virtual_ips[0] }
+  keepalived_virtual_ips = { example = module.lerna_stack_platform_aws_ec2.keepalived_virtual_ips[0] }
 
   # [必須] Keepalived の仮想ルーター ID（0～255 の中から全体で重複がない ID を割り当てる必要がある）
-  keepalived_virtual_router_ids = { default = 1 }
+  keepalived_virtual_router_ids = { example = 1 }
 
   # Keepalived の仮想IP用のネットワークインターフェース
   keepalived_virtual_ip_interface = module.lerna_stack_platform_aws_ec2.keepalived_virtual_ip_interface
@@ -60,25 +60,25 @@ module "lerna_stack_service_redhat_core" {
   haproxy_ssh_hosts = module.lerna_stack_platform_aws_ec2.haproxy_instance_ips
 
   # [必須] HAProxy の内部通信用ホストリスト
-  haproxy_cluster_hosts = { default = module.lerna_stack_platform_aws_ec2.haproxy_instance_ips }
+  haproxy_cluster_hosts = { example = module.lerna_stack_platform_aws_ec2.haproxy_instance_ips }
 
   # [必須] HAProxy RPMファイルのパス
   haproxy_rpm_path = "${path.module}/resources/haproxy-2.0.13-1.x86_64.rpm"
 
   # [必須] HAProxy がテナントごとに受け付けを許可する TPS 数。このレートを超えた場合 HTTP ステータス 503 がクライアントに返される
-  haproxy_rate_limit_tps = { default = 10 }
+  haproxy_rate_limit_tps = { example = 10 }
 
   # [必須] HAProxy がテナントごとに受け付ける最大コネクション数。
-  haproxy_max_connection = { default = 300 }
+  haproxy_max_connection = { example = 300 }
 
   # [必須] HAProxy がテナントごとにアプリケーション 1 プロセスへ接続する最大コネクション数。アプリケーション 1 プロセスから見ると確立されるコネクション数は [テナント数 ✕ HAProxy のノード数 ✕ 最大コネクション数] になる
-  haproxy_to_app_max_connection = { default = 5 }
+  haproxy_to_app_max_connection = { example = 5 }
 
   # HAProxy の SSL 通信で利用するクライアント証明書発行元 CA の証明書のサーバー上のパス。事前にサーバー上にファイルが配置されている必要がある
   //haproxy_ca_file_path = "/usr/local/certs/CA.crt"
 
   # [必須] HAProxy の SSL 通信で利用する SSL 証明書のサーバー上のパス。事前にサーバー上にファイルが配置されている必要がある
-  haproxy_crt_file_path = { default = module.lerna_stack_service_redhat_dev.haproxy_crt_file_path }
+  haproxy_crt_file_path = { example = module.lerna_stack_service_redhat_dev.haproxy_crt_file_path }
 
   # [必須] Application RPM ファイルの絶対パス
   app_rpm_path = var.app_rpm_path
@@ -108,7 +108,7 @@ module "lerna_stack_service_redhat_core" {
   app_akka_cluster_port = 25520
 
   # Akka の ActorSystem に設定した名前
-  //app_akka_actor_system_name = "default"
+  app_akka_actor_system_name = "GatewaySystem"
 
   # [必須] Application の JMX ポート番号
   app_jmx_port = 8686
@@ -159,7 +159,7 @@ module "lerna_stack_service_redhat_core" {
   cassandra_availability_zones = { az1 = module.lerna_stack_platform_aws_ec2.cassandra_instance_ips }
 
   # [必須] Cassandra のテナントごとのキースペース
-  cassandra_keyspaces = { default = ["akka"] }
+  cassandra_keyspaces = { example = ["akka_example"] }
 
   # MariaDBのyumリポジトリに使用するディストリビューション名
   mariadb_yum_repository_distribution_name = "centos8"
@@ -174,7 +174,44 @@ module "lerna_stack_service_redhat_core" {
 data "template_file" "app_arguments" {
   count    = length(module.lerna_stack_platform_aws_ec2.app_instance_ips)
   template = <<-EOL
-  -Dreactive.logs_dir="/apl/var/log/lerna-sample-payment-app/"
+
+  #
+  # lerna-sample-payment-app
+  #
+
+  ### Basics
+  -Dakka.cluster.min-nr-of-members=1
+  -Dakka.remote.artery.canonical.hostname=${module.lerna_stack_platform_aws_ec2.app_instance_ips[count.index]}
+  -Dkamon.system-metrics.host.sigar-native-folder=native/1
+  -Dreactive.logs_dir=/apl/var/log/lerna-sample-payment-app
+  -Djp.co.tis.lerna.payment.server-mode=PRODUCTION
+  -Dlerna.util.encryption.base64-key=v5LCFG4V1CbJxxPg+WTd8w==
+  -Dlerna.util.encryption.base64-iv=46A7peszgqN3q/ww4k8lWg==
+  -Dpublic-internet.http.interface=${module.lerna_stack_platform_aws_ec2.app_instance_ips[count.index]}
+  -Dprivate-internet.http.interface=${module.lerna_stack_platform_aws_ec2.app_instance_ips[count.index]}
+  -Dmanagement.http.interface=${module.lerna_stack_platform_aws_ec2.app_instance_ips[count.index]}
+
+  ### Cassandra
+  -Djp.co.tis.lerna.payment.application.persistence.cassandra.default.events-by-tag.first-time-bucket=20191030T10:30
+  -Dlerna.util.sequence.cassandra.default.contact-points=[]
+  %{for cassandra_instance_ip in module.lerna_stack_platform_aws_ec2.cassandra_instance_ips}
+  -Dlerna.util.sequence.cassandra.default.contact-points.${index(module.lerna_stack_platform_aws_ec2.cassandra_instance_ips, cassandra_instance_ip)}=${cassandra_instance_ip}
+  %{endfor}
+  -Dlerna.util.sequence.cassandra.default.data-center-replication-factors=[]
+  -Dlerna.util.sequence.cassandra.default.data-center-replication-factors.0=dc0:1
+
+  ### RDBMS
+  -Djp.co.tis.lerna.payment.readmodel.rdbms.default.db.url=jdbc:mysql://${module.lerna_stack_platform_aws_ec2.mariadb_instance_ips[0]}:3306/PAYMENTAPP
+  -Djp.co.tis.lerna.payment.readmodel.rdbms.default.db.user=paymentapp
+  -Djp.co.tis.lerna.payment.readmodel.rdbms.default.db.password=password
+
+  ### External Services
+  -Djp.co.tis.lerna.payment.gateway.issuing.default.base-url=http://127.0.0.1:8083
+  -Djp.co.tis.lerna.payment.gateway.wallet-system.default.base-url=http://127.0.0.1:8083
+
+  ### Tenants
+  -Djp.co.tis.lerna.payment.presentation.util.api.tenants.example.IssuingService.active=on
+
   EOL
 }
 

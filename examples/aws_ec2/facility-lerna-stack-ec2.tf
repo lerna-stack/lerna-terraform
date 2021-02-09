@@ -26,13 +26,13 @@ module "lerna_stack_platform_aws_ec2" {
   http_proxy_host = var.http_proxy_host
 
   # HTTP プロキシのポート番号
-  //http_proxy_port = 3128
+  http_proxy_port = var.http_proxy_port
 
   # Keepalived の VRRP で利用する NIC の名前
   //keepalived_vrrp_network_interface = "eth0"
 
   # SSH で利用するユーザー（設定する名前は AMI に依存）
-  //ssh_user = "centos"
+  ssh_user = var.ssh_user
 
   # SSH 公開鍵のパス
   //ssh_public_key = "~/.ssh/id_rsa.pub"

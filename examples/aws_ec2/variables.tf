@@ -34,6 +34,16 @@ variable "http_proxy_host" {
   # example = "xxx.xxx.xxx.xxx"
 }
 
+variable "http_proxy_port" {
+  description = "HTTP プロキシのポート番号"
+  default     = 3128
+}
+
+variable "ssh_user" {
+  description = "ssh ユーザ"
+  default     = "centos"
+}
+
 variable "app_rpm_path" {
   description = "アプリケーションの RPM ファイルの絶対パス"
   # example = "./resources/lerna-sample-payment-app-1.0.0-1.noarch.rpm"
