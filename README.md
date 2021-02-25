@@ -43,6 +43,8 @@ Service layer modules を単独で利用することで、プライベートク�
     - Terraform プロジェクトを作成します
   - [Lerna Stack 構築ガイド](docs/dev/LernaStack構築ガイド.md)
     - 既存のサーバー上にLerna Stack の各種サービス（Keepalived, Cassandra など）とアプリケーションをデプロイします
+  - [RedHatEnterpriseLinux利用ガイド](docs/dev/RedHatEnterpriseLinux7利用ガイド.md)  
+    - EC2で稼働するOSとして Red Hat Enterprise Linux 7 を利用できます
 
 ## Contributing
 
