@@ -20,9 +20,6 @@
 # [必須] HTTP プロキシのホスト名/IP
 //http_proxy_host = "xxx.xxx.xxx.xxx"
 
-# RedHat Enterprise Linux を使用するかどうか (有効化すると追加料金が発生する)
-//use_rhel = false
-
 # [必須] アプリケーションの RPM ファイルの絶対パス
 //app_rpm_path = "./resources/lerna-sample-payment-app-1.0.0-1.noarch.rpm"
 
