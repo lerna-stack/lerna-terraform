@@ -29,10 +29,10 @@ RHEL7 を利用するためには、幾つか追加で設定を行う必要が�
 利用するユーザ名は、次に示す設定項目から変更できます。  
 RHEL7 7.2 (HVM) (`ami-0dd8f963`) を使用する場合は、次のように設定できます。
 
-- モジュール `modules/service/centos/core`  
+- モジュール `modules/service/redhat/core`  
   - 設定項目 `ssh_users`  
     インスタンスごとのsshユーザ名に `ec2-user` を設定します。  
-- モジュール `modules/service/centos/dev`
+- モジュール `modules/service/redhat/dev`
   - 設定項目 `ssh_users`  
     インスタンスごとのsshユーザ名に `ec2-user` を設定します。
 - モジュール `modules/platform/aws/ec2`  
@@ -61,6 +61,6 @@ RHEL7 7.2 (HVM) (`ami-0dd8f963`) でサポートされているインスタン�
 
 MariaDBのインストール時に使用するyumリポジトリは、次に示す設定項目から変更できます。
 
-- モジュール `modules/service/centos/core`
+- モジュール `modules/service/redhat/core`
     - 設定項目 `mariadb_yum_repository_distribution_name = "rhel7"`  
       RHEL7 を使用するためには、`rhel7` を指定します。

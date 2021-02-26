@@ -13,13 +13,13 @@ Service layer modules を単独で利用することで、プライベートク�
 
 ### Service layer modules
 
-- **[service/centos/core]**
+- **[service/redhat/core]**
     - 既存のサーバー上に Lerna Stack の各種サービス（Keepalived, Cassandra など）とアプリケーションをデプロイします
-- **[service/centos/dev]**
+- **[service/redhat/dev]**
     - 既存のサーバー上に Lerna Stack を用いたシステムの開発環境に必要なリソースをデプロイします
 
-[service/centos/core]: modules/service/centos/core
-[service/centos/dev]: modules/service/centos/dev
+[service/redhat/core]: modules/service/redhat/core
+[service/redhat/dev]: modules/service/redhat/dev
 
 ### Platform layer modules
 
@@ -35,7 +35,7 @@ Service layer modules を単独で利用することで、プライベートク�
 - **[aws_vpc](examples/aws_vpc)**
     - [platform/aws/ec2] を構築するのに必要な VPC（Virtual Private Cloud）を構築するサンプルです
 - **[aws_ec2](examples/aws_ec2)**
-    - [platform/aws/ec2] モジュールと [service/centos/core] モジュールを組み合わせたサンプルです
+    - [platform/aws/ec2] モジュールと [service/redhat/core] モジュールを組み合わせたサンプルです
 
 ## User Guides
 

@@ -14,5 +14,5 @@
 
 `terraform.tfvars` は git の管理外なので、個人の設定がリポジトリで共有されてしまうのを防ぐことができます。
 
-[examples/aws_ec2](/examples/aws_ec2) プロジェクトは [platform/aws/ec2](/modules/platform/aws/ec2) モジュールと [service/centos/core](/modules/service/centos/core) モジュールを組み合わせた例です。
+[examples/aws_ec2](/examples/aws_ec2) プロジェクトは [platform/aws/ec2](/modules/platform/aws/ec2) モジュールと [service/redhat/core](/modules/service/redhat/core) モジュールを組み合わせた例です。
 Terraform プロジェクトを新しく構成する際の参考として参照してください。

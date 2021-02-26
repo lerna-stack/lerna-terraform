@@ -1,5 +1,5 @@
-module "lerna_stack_service_centos_dev" {
-  source = "../../modules/service/centos/dev"
+module "lerna_stack_service_redhat_dev" {
+  source = "../../modules/service/redhat/dev"
 
   # [必須] HAProxy の SSH 用ホストリスト（HAProxy のインストール先）
   haproxy_ssh_hosts = module.lerna_stack_platform_aws_ec2.haproxy_instance_ips
@@ -14,8 +14,8 @@ module "lerna_stack_service_centos_dev" {
   //ssh_passwords = null
 }
 
-module "lerna_stack_service_centos_core" {
-  source = "../../modules/service/centos/core"
+module "lerna_stack_service_redhat_core" {
+  source = "../../modules/service/redhat/core"
 
   # 有効にするテナント
   //active_tenants = ["default"]
@@ -78,7 +78,7 @@ module "lerna_stack_service_centos_core" {
   //haproxy_ca_file_path = "/usr/local/certs/CA.crt"
 
   # [必須] HAProxy の SSL 通信で利用する SSL 証明書のサーバー上のパス。事前にサーバー上にファイルが配置されている必要がある
-  haproxy_crt_file_path = { default = module.lerna_stack_service_centos_dev.haproxy_crt_file_path }
+  haproxy_crt_file_path = { default = module.lerna_stack_service_redhat_dev.haproxy_crt_file_path }
 
   # [必須] Application RPM ファイルの絶対パス
   app_rpm_path = var.app_rpm_path
