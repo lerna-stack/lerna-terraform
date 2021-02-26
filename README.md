@@ -45,12 +45,17 @@ Service layer modules を単独で利用することで、プライベートク�
     - 既存のサーバー上にLerna Stack の各種サービス（Keepalived, Cassandra など）とアプリケーションをデプロイします
   - [RedHatEnterpriseLinux利用ガイド](docs/dev/RedHatEnterpriseLinux7利用ガイド.md)  
     - EC2で稼働するOSとして Red Hat Enterprise Linux 7 を利用できます
+  - [マイグレーションガイド](MIGRATION.md)  
+    メジャーバージョンには破壊的変更が含まれることがあります。  
+    メジャーバージョンを更新する際には、必ずマイグレーションガイドを確認してください。
 
 ## Contributing
 
 本プロジェクトの開発に参加する際は次の手順で開発環境を構築してください。
 
 [開発環境セットアップガイド](./docs/dev/開発環境セットアップガイド.md)
+
+バージョンアップ時には、[CHANGELOG.md](CHANGELOG.md), [MIGRATION.md](MIGRATION.md) を更新してください。
 
 ## License
 
