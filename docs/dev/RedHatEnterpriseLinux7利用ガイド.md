@@ -12,6 +12,8 @@
 RHEL 7.2 (HVM) を利用するには、
 `modules/platform/aws/ec2` の `aws_ami` を `ami-0dd8f963` に設定します。
 AMI `ami-0dd8f963` を使う場合には追加の料金を払う必要があるため注意してください。
+利用料金は、[AWS Marketplace: Red Hat Enterprise Linux (RHEL) 7.2 (HVM)](https://aws.amazon.com/marketplace/pp/B019NS7T5I?qid=1612505340203&sr=0-2&ref_=srh_res_product_title)
+の Pricing Information にて確認できます。
 
 RHEL7 を利用するためには、幾つか追加で設定を行う必要があります。
 必要な設定は次の3つです。
@@ -48,7 +50,12 @@ RHEL7 7.2 (HVM) (`ami-0dd8f963`) を使用する場合には次のように設�
   - 設定項目 `app_instance_type = "r3.large"`  
   - 設定項目 `cassandra_instance_type = "r3.xlarge"`  
   - 設定項目 `mariadb_instance_type = "r3.large"`  
-  - 設定項目 `gatling_instance_type = "r3.large"`  
+  - 設定項目 `gatling_instance_type = "r3.large"`
+
+インスタンスタイプには、使用するAMI(`ami-0dd8f963`)がサポートしているもののみが利用できます。
+RHEL7 7.2 (HVM) (`ami-0dd8f963`) でサポートされているインスタンスタイプは、
+[AWS Marketplace: Red Hat Enterprise Linux (RHEL) 7.2 (HVM)](https://aws.amazon.com/marketplace/pp/B019NS7T5I?qid=1612505340203&sr=0-2&ref_=srh_res_product_title)
+の Pricing Information にて確認できます。
 
 ### MariaDBのインストールに使用するyumリポジトリの設定
 
