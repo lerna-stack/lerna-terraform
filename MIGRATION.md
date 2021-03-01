@@ -40,38 +40,9 @@ module "your-module-name" {
 }
 ```
 
-#### `terraform.tfstate` にある旧モジュールへの参照を書き換える
-
-`terraform.tfstate` ファイルにあるファイルパスを書き換える必要があります。  
-`v1.0.0` を使用している場合、次のように `output_path` と `source_dir` に、
-`modules/service/centos/core` という旧モジュール名が含まれています。
-
-```shell
-[***]$ grep -i 'modules/service/centos' terraform.tfstate
-            "output_path": ".terraform/modules/lerna_stack_service_core/modules/service/centos/core/resources/cassandra/conf.zip",
-            "source_dir": ".terraform/modules/lerna_stack_service_core/modules/service/centos/core/resources/cassandra/conf",
-            "output_path": ".terraform/modules/lerna_stack_service_core/modules/service/centos/core/resources/management-script/global.zip",
-            "source_dir": ".terraform/modules/lerna_stack_service_core/modules/service/centos/core/resources/management-script/global",
-```
-
-`output_path`, `source_dir` のファイルパスに含まれる `modules/service/centos` を `modules/service/redhat` に書き換えてください。  
-
-※ `terraform.tfstate` を書き換える前に必ずバックアップを取得してください。  
-[Manipulating Terraform State](https://www.terraform.io/docs/cli/state/index.html) も合わせて確認してください。
-
-書き換えたあとは、次のようになります。
-
-```shell
-[***]$ grep -i 'modules/service/redhat' terraform.tfstate
-            "output_path": ".terraform/modules/lerna_stack_service_core/modules/service/redhat/core/resources/cassandra/conf.zip",
-            "source_dir": ".terraform/modules/lerna_stack_service_core/modules/service/redhat/core/resources/cassandra/conf",
-            "output_path": ".terraform/modules/lerna_stack_service_core/modules/service/redhat/core/resources/management-script/global.zip",
-            "source_dir": ".terraform/modules/lerna_stack_service_core/modules/service/redhat/core/resources/management-script/global",
-```
-
 ### `terraform plan` & `apply` を実行する
 
-`*.tf` ファイルと `terraform.tfstate` の書き換えが終わった後、
+`*.tf` ファイルの書き換えが終わった後、
 terraform が新しいモジュールを使えるように `terraform init` を実行し、エラーが出ないことを確認してください。
 
 
