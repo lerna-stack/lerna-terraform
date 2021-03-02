@@ -128,16 +128,22 @@ resource "null_resource" "common_dnf_tuning" {
     inline = [<<-EOC
     set -xe
 
-    # パッケージインストールがとても遅くなる場合があるので設定
-    # https://www.tekfik.com/kb/linux/fedora-rhel-centos-dnf-extremely-slow
-    # https://www.reddit.com/r/Fedora/comments/bc9pyz/why_is_dnf_so_excruciatingly_slow/
-    sudo sed --regexp-extended --in-place \
-      -e '/^ip_resolve=/d'              -e '$a ip_resolve=4' \
-      -e '/^fastestmirror=/d'           -e '$a fastestmirror=true' \
-      -e '/^max_parallel_downloads=/d'  -e '$a max_parallel_downloads=10' \
-      /etc/dnf/dnf.conf
-
-    sudo dnf clean all
+    # RHEL7 は dnf を使わないため、
+    # dnf ファイルがある場合にのみ設定する
+    readonly DNF_CONF_PATH='/etc/dnf/dnf.conf'
+    if [[ -w DNF_CONF_PATH ]]; then
+      # パッケージインストールがとても遅くなる場合があるので設定
+      # https://www.tekfik.com/kb/linux/fedora-rhel-centos-dnf-extremely-slow
+      # https://www.reddit.com/r/Fedora/comments/bc9pyz/why_is_dnf_so_excruciatingly_slow/
+      sudo sed --regexp-extended --in-place \
+        -e '/^ip_resolve=/d'              -e '$a ip_resolve=4' \
+        -e '/^fastestmirror=/d'           -e '$a fastestmirror=true' \
+        -e '/^max_parallel_downloads=/d'  -e '$a max_parallel_downloads=10' \
+        $DNF_CONF_PATH
+      sudo dnf clean all
+    else
+      echo "Skip dnf tuning because the OS does not have dnf config at $DNF_CONF_PATH"
+    fi
 
     EOC
     ]

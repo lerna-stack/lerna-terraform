@@ -93,11 +93,12 @@ resource "null_resource" "setup_for_keepalived" {
       then
         : Install aws cli
         # https://docs.aws.amazon.com/cli/latest/userguide/install-linux.html
-        sudo -E yum install -y unzip python38
-        sudo alternatives --set python /usr/bin/python3  # 'python' コマンドを python3 に向ける
+        # AWS CLI には Python 3.4+ が必要である
+        sudo -E yum install -y unzip python36
         curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
         unzip -o awscli-bundle.zip
-        sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+        # AWS CLI では python3 を明示的に使う (デフォルトではシステムのデフォルトバージョンが使われる)
+        sudo /usr/bin/python3 ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
       fi
 
       sudo install --owner=root --group=root --mode=0755 /tmp/aws-vpc-garp-support/aws-vpc-garp-support.sh      /usr/local/bin/aws-vpc-garp-support.sh

@@ -17,7 +17,7 @@ module "lerna_stack_platform_aws_ec2" {
   aws_vpc_subnet_id = var.aws_vpc_subnet_id
 
   # [必須] ルートテーブルの書き換えが可能なポリシーを持つロール
-  aws_keepalived_instance_role_name = "keepalived_ec2"
+  aws_keepalived_instance_role_name = "keepalived_instance_role"
 
   # [必須] 仮想IPを付与するルートテーブル
   aws_vpc_route_table_id_for_virtual_ips = var.aws_vpc_route_table_id_for_virtual_ips

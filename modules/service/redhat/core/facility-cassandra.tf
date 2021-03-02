@@ -268,7 +268,10 @@ resource "null_resource" "cassandra_tools" {
       # cqlsh が python2 に依存する
       # https://support.datastax.com/hc/en-us/articles/115000180726--No-appropriate-python-interpreter-found-when-running-cqlsh
       sudo -E yum install -y python2
-      sudo alternatives --set python /usr/bin/python2  # 'python' コマンドを python2 に向ける
+      # 'python' コマンドを python2 に向ける
+      # RHEL7 では python が登録されていないため --install してから --set することでエラー発生を回避する
+      sudo alternatives --install /usr/bin/unversioned-python python /usr/bin/python2 10
+      sudo alternatives --set python /usr/bin/python2
       EOC
     ]
   }

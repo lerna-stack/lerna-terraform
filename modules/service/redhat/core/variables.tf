@@ -289,6 +289,16 @@ variable "cassandra_keyspaces" {
   # example = { default = ["akka"] }
 }
 
+variable "mariadb_yum_repository_distribution_name" {
+  type        = string
+  description = "MariaDBのyumリポジトリに使うディストリビューション名"
+  default     = "centos8"
+  validation {
+    condition     = contains(["centos8", "rhel7"], var.mariadb_yum_repository_distribution_name)
+    error_message = "Distribution Name must be 'centos8' or 'rhel7'."
+  }
+}
+
 variable "mariadb_ssh_hosts" {
   type        = list(string)
   description = "MariaDB の SSH 用ホストリスト（MariaDB のインストール先）"
