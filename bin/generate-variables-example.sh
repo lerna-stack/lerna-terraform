@@ -2,12 +2,12 @@
 
 set -eux
 
-script_name="$(basename $0)"
+script_name="$(basename "$0")"
 
 readonly env_template_dir='env_template'
 
 function main {
-  case ${1:-generate-tfvars} in
+  case "${1:-generate-tfvars}" in
     "check-module-template" )     check_module_template "$2" ;;
     "generate-module-template" )  generate_module_template "$2" ;;
     "check-tfvars" )      check_tfvars "$2" ;;
@@ -151,7 +151,7 @@ function print_example {
   construct_example "${variables_file}" \
     | terraform fmt - \
     | sed -E -e 's@^([^#].+)@//\1@'
-  return ${PIPESTATUS[1]}
+  return "${PIPESTATUS[1]}"
 }
 
-main $@
+main "$@"

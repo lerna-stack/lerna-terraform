@@ -7,9 +7,9 @@ if [ $# -ne 1 ]; then
   exit 1
 fi
 
-TARGET_DIR=${1}
+TARGET_DIR="${1}"
 
-cd $TARGET_DIR || exit 1
+cd "$TARGET_DIR" || exit 1
 
 terraform init
 terraform validate
