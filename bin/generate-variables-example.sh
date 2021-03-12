@@ -38,7 +38,7 @@ function generate_module_template {
   mkdir -p "${env_template_dir}"
 
   print_module_example "${variables_file}" > "$(module_facility_tf_path_of "${variables_file}")"
-  return ${PIPESTATUS[1]}
+  return "${PIPESTATUS[0]}"
 }
 
 function module_facility_tf_path_of {
