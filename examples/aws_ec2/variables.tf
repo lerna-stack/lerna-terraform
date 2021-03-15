@@ -46,7 +46,7 @@ variable "ssh_user" {
 
 variable "app_rpm_path" {
   description = "アプリケーションの RPM ファイルの絶対パス"
-  # example = "./resources/lerna-sample-payment-app-1.0.0-1.noarch.rpm"
+  default     = "./resources/lerna-sample-payment-app-1.0.0-1.noarch.rpm"
 }
 
 variable "keepalived_private_ips" {

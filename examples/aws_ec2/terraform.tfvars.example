@@ -26,7 +26,7 @@
 # ssh ユーザ
 //ssh_user = "centos"
 
-# [必須] アプリケーションの RPM ファイルの絶対パス
+# アプリケーションの RPM ファイルの絶対パス
 //app_rpm_path = "./resources/lerna-sample-payment-app-1.0.0-1.noarch.rpm"
 
 # [必須] Keepalived サーバーの Private IP リスト
