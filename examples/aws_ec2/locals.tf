@@ -6,4 +6,5 @@ locals {
     module.lerna_stack_platform_aws_ec2.cassandra_instance_ips,
     module.lerna_stack_platform_aws_ec2.mariadb_instance_ips,
   )
+  mock-server-docker-filepath = "/apl/lerna-sample-payment-app/docker/mock-server"
 }

@@ -3,29 +3,6 @@
 [lerna-sample-payment-app] をアプリとして利用するには、
 このドキュメントに記載の手順を実施する必要があります。
 
-## モックサーバを準備する
-※`terraform apply` 前に実施してください。
-
-[facility-mock-server.tf.orig](facility-mock-server.tf.orig) を
-`facility-mock-server.tf` にコピーするため、次のコマンドを実行してください。
-```shell
-$ cp facility-mock-server.tf.orig facility-mock-server.tf
-```
-
-[mock-server] ディレクトリをダウンロードし、
-[resources](./resources) に配置してください。
-次のような構成になります。
-```md
-- resources
-    - mock-server
-        - Dockerfile
-        - index.js
-        - etc...
-```
-
-ディレクトリを配置できたら `terraform apply` を実施してください。  
-※ `terraform apply` 実施前に、 README に記載の [準備](README.md#準備) が完了していることも確認してください。
-
 ## MariaDB をセットアップする
 ※`terraform apply` 後に実施してください。  
 MariaDB のサービスを起動している必要があります。  

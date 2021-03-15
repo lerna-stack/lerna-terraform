@@ -3,13 +3,16 @@
 #
 # lerna-sample-payment-app => mock-server
 #
-resource "null_resource" "mock-server" {
+resource "null_resource" "setup_for_mock_server" {
   count = length(module.lerna_stack_platform_aws_ec2.app_instance_ips)
+
+  # Files of a mock-server is served by an Application RPM package
+  depends_on = [module.lerna_stack_service_redhat_core]
 
   triggers = {
     docker_compose  = md5(data.template_file.docker_compose.rendered)
     http_proxy_conf = md5(data.template_file.http_proxy_conf.rendered)
-    mock_server     = data.archive_file.mock-server.output_md5
+    app_rpm         = filemd5(var.app_rpm_path)
   }
 
   connection {
@@ -26,11 +29,6 @@ resource "null_resource" "mock-server" {
   provisioner "file" {
     content     = data.template_file.http_proxy_conf.rendered
     destination = "/tmp/http-proxy.conf"
-  }
-
-  provisioner "file" {
-    source      = "${path.module}/resources/mock-server.zip"
-    destination = "/tmp/mock-server.zip"
   }
 
   provisioner "remote-exec" {
@@ -77,12 +75,6 @@ resource "null_resource" "mock-server" {
 
     set -Cex
 
-    # Replace ~/mock-server
-    mv /tmp/mock-server.zip ./mock-server.zip
-    rm -rf ./mock-server
-    unzip -d ./mock-server ./mock-server.zip
-    rm -f ./mock-server.zip
-
     # Rebuild docker images & Restart docker containers
     docker-compose up -d --build --force-recreate
 
@@ -100,7 +92,7 @@ version: '3'
 services:
   mock:
     build:
-      context: ~/mock-server
+      context: ${local.mock-server-docker-filepath}
       args:
         http_proxy:
         https_proxy:
@@ -129,10 +121,4 @@ ${var.http_proxy_host != ""
 Environment="NO_PROXY=localhost"
 
   EOF
-}
-
-data "archive_file" "mock-server" {
-  type        = "zip"
-  source_dir  = "${path.module}/resources/mock-server"
-  output_path = "${path.module}/resources/mock-server.zip"
 }
