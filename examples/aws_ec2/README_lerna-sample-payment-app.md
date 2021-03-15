@@ -90,6 +90,10 @@ Cassandra サーバで、keyspace と table を作成します。
 
 keyspace と table を作成するために、  
 [resources/lerna-sample-payment-app.cql](resources/lerna-sample-payment-app.cql) を実行してください。  
+この CQL ファイルは Cassandra サーバを 3台以上で構成することを想定しており、  
+Replication Factor が 3 と設定されています。  
+Cassandra サーバを3台未満で構成する場合には、   
+Replication Factor をサーバ台数以下となるように調整してください。
 
 Cassandra サーバに、コマンド `scp` でファイルをコピーします。
 ```shell

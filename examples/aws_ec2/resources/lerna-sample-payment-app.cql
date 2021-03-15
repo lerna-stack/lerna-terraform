@@ -1,8 +1,9 @@
 // PRODUCTION では Replication Factor を適切に設定してください
+
 // akka_example
-CREATE KEYSPACE IF NOT EXISTS akka_example WITH replication = {'class': 'NetworkTopologyStrategy', 'dc0' : 1 };
+CREATE KEYSPACE IF NOT EXISTS akka_example WITH replication = {'class': 'NetworkTopologyStrategy', 'dc0' : 3 };
 // akka_tenant_a
-CREATE KEYSPACE IF NOT EXISTS akka_tenant_a WITH replication = {'class': 'NetworkTopologyStrategy', 'dc0' : 1 };
+CREATE KEYSPACE IF NOT EXISTS akka_tenant_a WITH replication = {'class': 'NetworkTopologyStrategy', 'dc0' : 3 };
 
 // 各 keyspace に 必要な table は次のリンクから確認できます
 // https://doc.akka.io/docs/akka-persistence-cassandra/current/journal.html#schema
