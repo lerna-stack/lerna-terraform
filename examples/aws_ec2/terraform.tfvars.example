@@ -20,7 +20,13 @@
 # [必須] HTTP プロキシのホスト名/IP
 //http_proxy_host = "xxx.xxx.xxx.xxx"
 
-# [必須] アプリケーションの RPM ファイルの絶対パス
+# HTTP プロキシのポート番号
+//http_proxy_port = 3128
+
+# ssh ユーザ
+//ssh_user = "centos"
+
+# アプリケーションの RPM ファイルの絶対パス
 //app_rpm_path = "./resources/lerna-sample-payment-app-1.0.0-1.noarch.rpm"
 
 # [必須] Keepalived サーバーの Private IP リスト
