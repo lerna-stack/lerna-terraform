@@ -162,7 +162,7 @@ function repair {
   do
       for KEYSPACE in ${KEYSPACE_LIST}
       do
-          execute_remote_repair "${PROD_HOST}" "${KEYSPACE}"
+          execute_remote_repair "${DR_HOST}" "${KEYSPACE}"
       done
   done
 }
