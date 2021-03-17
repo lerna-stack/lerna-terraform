@@ -35,10 +35,10 @@ module "lerna_stack_platform_aws_ec2" {
   ssh_user = var.ssh_user
 
   # SSH 公開鍵のパス
-  //ssh_public_key = "~/.ssh/id_rsa.pub"
+  ssh_public_key = var.ssh_public_key_file_path
 
   # SSH 秘密鍵のパス
-  //ssh_private_key = "~/.ssh/id_rsa"
+  ssh_private_key = var.ssh_private_key_file_path
 
   # [必須] リソースの命名に含めるプレフィックス。誰が作ったリソースか識別するのに利用する
   name_prefix = var.name_prefix
