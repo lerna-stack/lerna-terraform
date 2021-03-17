@@ -98,13 +98,11 @@ resource "null_resource" "setup_for_cassandra_backup" {
 module "nfs_instance" {
   source = "./modules/nfs-instance"
 
-  ami               = "ami-089a156ea4f52a0a3"
   instance_type     = "t2.medium"
   keypair_key_name  = aws_key_pair.nfs_instance.key_name
   private_ip        = var.nfs_instance_private_ip
   security_group_id = var.aws_vpc_security_group_id
   ssh_private_key   = file(var.ssh_private_key_file_path)
-  ssh_user          = "centos"
   subnet_id         = var.aws_vpc_subnet_id
   tags = {
     Name = "${var.name_prefix}-nfs-instance"

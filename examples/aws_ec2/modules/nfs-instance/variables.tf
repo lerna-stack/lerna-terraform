@@ -21,6 +21,7 @@ variable "instance_type" {
 variable "ami" {
   description = "AMI"
   type        = string
+  default     = "ami-089a156ea4f52a0a3"
 }
 
 variable "keypair_key_name" {
@@ -30,6 +31,7 @@ variable "keypair_key_name" {
 variable "ssh_user" {
   description = "SSH user name"
   type        = string
+  default     = "centos"
 }
 
 variable "ssh_private_key" {
@@ -40,6 +42,7 @@ variable "ssh_private_key" {
 variable "tags" {
   description = "Tags"
   type        = map(string)
+  default     = {}
 }
 
 variable "nfs_export_path" {
