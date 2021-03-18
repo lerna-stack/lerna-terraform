@@ -49,12 +49,12 @@ RC=0
 
 case ${MTYPE} in
    mount  )
-      if [ `df | grep -c ${FSYSTEM}` -ne 0 ] ; then
+      if [ "$(df | grep -c "${FSYSTEM}")" -ne 0 ] ; then
            RC=1
            log ${RC} "[${FSYSTEM}] is already mounted."
          exit 1
       else
-         ${MTYPE} ${FSYSTEM} ; RC=${?}
+         ${MTYPE} "${FSYSTEM}" ; RC=${?}
          if [ ${RC} -ne 0 ] ; then
            log ${RC} "[${FSYSTEM}] mount Failed."
          exit 1
@@ -62,12 +62,12 @@ case ${MTYPE} in
       fi
       ;;
    umount )
-      if [ `df | grep -c ${FSYSTEM}` -eq 0 ] ; then
+      if [ "$(df | grep -c "${FSYSTEM}")" -eq 0 ] ; then
          RC=1
          log ${RC} "[${FSYSTEM}] is already unmounted."
          exit 1
       else
-         ${MTYPE} ${FSYSTEM} ; RC=${?}
+         ${MTYPE} "${FSYSTEM}" ; RC=${?}
          if [ ${RC} -ne 0 ] ; then
             log ${RC} "[${FSYSTEM}] unmount Failed."
             exit 1
