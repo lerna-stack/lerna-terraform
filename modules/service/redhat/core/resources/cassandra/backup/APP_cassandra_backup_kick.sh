@@ -47,7 +47,7 @@ function log {
 ###############################
 function validate_user {
   local USER=$(whoami)
-  if [[ ${USER} != ${SSH_USER} ]] ; then
+  if [[ ${USER} != "${SSH_USER}" ]] ; then
       RC=1
       log ${RC} "please execute job with user : ${SSH_USER} !![${USER}]"
       exit 1
@@ -61,7 +61,7 @@ function is_valid_tenant() {
     local TEMP_TENANT_ID=$1
     for VALID_TENANT_ID in ${TENANT_ID_LIST};
     do
-      if [[ ${VALID_TENANT_ID} == ${TEMP_TENANT_ID} ]] ; then
+      if [[ ${VALID_TENANT_ID} == "${TEMP_TENANT_ID}" ]] ; then
         return 0
       fi
     done

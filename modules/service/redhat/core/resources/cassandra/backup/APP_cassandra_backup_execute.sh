@@ -48,7 +48,7 @@ function log {
 ###############################
 function validate_user {
   local USER=$(whoami)
-  if [[ ${USER} != ${SSH_USER} ]] ; then
+  if [[ ${USER} != "${SSH_USER}" ]] ; then
       RC=1
       log ${RC} "please execute job with user : ${SSH_USER} !![${USER}]"
       exit 1
