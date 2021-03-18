@@ -36,7 +36,8 @@ function check_params {
     declare -a PARAMS_A=("$@")
     local LEN=${#PARAMS_A[@]}
     # Sort array as unique
-    local SORTED_UNIQUE_TENANT_IDS_A=($(echo "${PARAMS_A[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
+    local SORTED_UNIQUE_TENANT_IDS_A=()
+    read -r -a SORTED_UNIQUE_TENANT_IDS_A <<< "$(echo "${PARAMS_A[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' ')"
     local LEN_SU=${#SORTED_UNIQUE_TENANT_IDS_A[@]}
     # Check if parameter is empty
     if [[ LEN -eq 0 ]] ; then

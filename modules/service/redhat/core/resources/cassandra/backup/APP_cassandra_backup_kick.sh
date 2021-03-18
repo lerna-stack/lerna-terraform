@@ -74,8 +74,10 @@ function is_valid_tenant() {
 ###############################
 function check_keysapce_config() {
   local KEYSPACE_CONF="$1"
-  local ALL_KEYSPACE_LIST=($(/bin/echo "${KEYSPACE_CONF}"  | sed -E '/^\s*(#|$)/d' | awk '{ print $2 }'))
-  local ALL_KEYSPACE_LIST_UNIQUE=($(/bin/echo "${KEYSPACE_CONF}"  | sed -E '/^\s*(#|$)/d' | awk '{ print $2 }' | sort -u))
+  local ALL_KEYSPACE_LIST=()
+  read -r -a ALL_KEYSPACE_LIST <<< "$(/bin/echo "${KEYSPACE_CONF}"  | sed -E '/^\s*(#|$)/d' | awk '{ print $2 }')"
+  local ALL_KEYSPACE_LIST_UNIQUE=()
+  read -r -a ALL_KEYSPACE_LIST_UNIQUE <<< "$(/bin/echo "${KEYSPACE_CONF}"  | sed -E '/^\s*(#|$)/d' | awk '{ print $2 }' | sort -u)"
   if [[ ${#ALL_KEYSPACE_LIST_UNIQUE[@]} -ne ${#ALL_KEYSPACE_LIST[@]} ]] ; then
       RC=1
       log ${RC} "Duplicated keyspace, every keyspace should be only once in config '/opt/management/config/backup_keyspaces.conf'."
