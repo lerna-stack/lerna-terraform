@@ -9,6 +9,34 @@
 
 ## リストア方法
 
+### 0. Cassandra ノードに接続しているクライアントが存在しないことを確認する
+
+※すべての Cassandra ノードで次の手順実施します。
+
+Cassandra ノードに接続しているクライアントが存在しないことを確認します。
+
+接続しているクライアントが存在しないことを確認するため、次のコマンドを実行してください。  
+※ Cassandra が使用するポート番号 `9042` を変更した場合は適切にコマンドを調整してください。  
+※ Cassandra 4.0+ であれば、[nodetool clientstats](https://cassandra.apache.org/doc/latest/tools/nodetool/clientstats.html) を使ってください。
+
+```shell
+# 一覧に何も表示されないことを確認してください。
+# この結果は Cassandra に接続しているクライアントが存在する例を示しています。
+# このように `ESTABLISHED` になっている接続がある場合には、クライアントから接続を切る必要があります。
+$ netstat --tcp -a | grep 9042 | grep ESTABLISHED
+tcp        0      0 ip-10-0-1-61.ap-no:9042 10.0.1.51:44638         ESTABLISHED
+tcp        0      0 ip-10-0-1-61.ap-no:9042 10.0.1.51:44772         ESTABLISHED
+tcp        0      0 ip-10-0-1-61.ap-no:9042 10.0.1.51:44768         ESTABLISHED
+tcp        0      0 ip-10-0-1-61.ap-no:9042 10.0.1.51:44752         ESTABLISHED
+tcp        0      0 ip-10-0-1-61.ap-no:9042 10.0.1.51:44742         ESTABLISHED
+tcp        0      0 ip-10-0-1-61.ap-no:9042 10.0.1.51:44758         ESTABLISHED
+tcp        0      0 ip-10-0-1-61.ap-no:9042 10.0.1.51:44744         ESTABLISHED
+tcp        0      0 ip-10-0-1-61.ap-no:9042 10.0.1.51:44640         ESTABLISHED
+tcp        0      0 ip-10-0-1-61.ap-no:9042 10.0.1.51:44740         ESTABLISHED
+tcp        0      0 ip-10-0-1-61.ap-no:9042 10.0.1.51:44632         ESTABLISHED
+```
+
+
 ### 1. すべての Cassandra ノードを停止する
 ※すべての Cassandra ノードで次の手順実施します。
 
