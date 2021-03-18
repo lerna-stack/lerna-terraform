@@ -159,7 +159,7 @@ function main {
 function backup {
   # calculate subarray of PROD enviroment hosts
   local PROD_NODE_NUM=${#PROD_HOSTS[@]}
-  local PROD_BACKUP_NODE_NUM="$(((1-${REPLICATION_FACTOR}/${PROD_NODE_NUM})*${PROD_NODE_NUM}+1))"
+  local PROD_BACKUP_NODE_NUM=$(( (1 - REPLICATION_FACTOR/PROD_NODE_NUM) * PROD_NODE_NUM + 1 ))
   readonly PROD_BACKUP_NODES=("${PROD_HOSTS[@]:0:${PROD_BACKUP_NODE_NUM}}")
   # take prod env backup
   for PROD_HOST in "${PROD_BACKUP_NODES[@]}";
