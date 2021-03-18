@@ -27,6 +27,8 @@ RC=0
 ###############################
 function log {
     local RC="${1}" MSG="${2}"
+    local base_dir
+    base_dir=$(basename "$0")
 
     if [[ "${RC}" = "0" ]]; then
         local LEVEL=INFO
@@ -38,7 +40,7 @@ function log {
         local TENANT_ID="unknown"
     fi
 
-    /bin/echo -e "$(date +%Y/%m/%d\ %H:%M:%S)\t$(basename $0)\t$(whoami)\texit_code:${RC}\t${LEVEL}\t${MSG}\ttenant_id:${TENANT_ID}" | tee --append ${LOGNAME}
+    /bin/echo -e "$(date +%Y/%m/%d\ %H:%M:%S)\t${base_dir}\t$(whoami)\texit_code:${RC}\t${LEVEL}\t${MSG}\ttenant_id:${TENANT_ID}" | tee --append ${LOGNAME}
 }
 
 ###############################
