@@ -152,7 +152,7 @@ function mount_backup_storage {
 #send backup server
 ###############################
 function send_archive_to_backup_server {
-  find ${CASSANDRA_DATA_DIR} -path "*/snapshots/${SNAPSHOT_NAME}" -print0 | tar -cvz -T - --null -f /tmp/${SNAPSHOT_NAME}.tar.gz ; RC=${?}
+  find ${CASSANDRA_DATA_DIR} -path "*/snapshots/${SNAPSHOT_NAME}" -print0 | tar --null -cvz -T - -f /tmp/${SNAPSHOT_NAME}.tar.gz ; RC=${?}
   if [[ ${RC} -ne 0 ]] ; then
       log ${RC} "zip ${EXECUTE_HOST} is abnormal end."
       exit 1
