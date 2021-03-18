@@ -95,6 +95,8 @@ resource "null_resource" "setup_for_cassandra_backup" {
     : Replace SSH User
     sudo sed -e '/^readonly SSH_USER=/s/.*/readonly SSH_USER="'"$cassandra_backup_user"'"/' \
        -i.bak /opt/management/bin/APP_cassandra_backup_kick.sh
+    sudo sed -e '/^readonly SSH_USER=/s/.*/readonly SSH_USER="'"$cassandra_backup_user"'"/' \
+       -i.bak /opt/management/bin/APP_cassandra_backup_execute.sh
 
     EOC
     ]
