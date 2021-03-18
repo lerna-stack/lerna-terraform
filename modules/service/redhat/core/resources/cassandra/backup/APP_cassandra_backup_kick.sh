@@ -46,7 +46,8 @@ function log {
 #check execute user
 ###############################
 function validate_user {
-  local USER=$(whoami)
+  local USER
+  USER=$(whoami)
   if [[ ${USER} != "${SSH_USER}" ]] ; then
       RC=1
       log ${RC} "please execute job with user : ${SSH_USER} !![${USER}]"
@@ -133,7 +134,8 @@ function parse_arguments() {
     is_valid_tenant "${TENANT_ID}" ; RC=${?}
     if [[ ${RC} -ne 0 ]] ; then
         # transpose list to line with delimiter comma
-        local TENANT_ID_LIST_LOG=$(/bin/paste --serial --delimiters=',' <<< "${TENANT_ID_LIST}")
+        local TENANT_ID_LIST_LOG
+        TENANT_ID_LIST_LOG=$(/bin/paste --serial --delimiters=',' <<< "${TENANT_ID_LIST}")
         log ${RC} "Invalid tenant_id : ${TENANT_ID}, only supported one of (${TENANT_ID_LIST_LOG})."
         exit 1
     fi
