@@ -56,5 +56,13 @@
 # [必須] Keepalived が付与する仮想 IP（サブネットの範囲外の IP を指定）
 //keepalived_virtual_ips = ["192.168.100.100"]
 
+# Cassandraバックアップジョブ用ユーザが使用する SSH 公開鍵 のファイルパス
+//cassandra_backup_user_ssh_public_key_filepath = "./resources/id_rsa_cassandra_backup_user.pub"
+
+# Cassandraバックアップジョブ用ユーザが使用する SSH 秘密鍵 のファイルパス
+#  ※この秘密鍵は Cassandra サーバに配布され、開発チームで共有されます。
+#  専用の鍵を新規に作成することを強く推奨します。
+//cassandra_backup_user_ssh_private_key_filepath = "./resources/id_rsa_cassandra_backup_user"
+
 # [必須] NFS サーバの Private IP
 //nfs_instance_private_ip = "10.0.0.1"

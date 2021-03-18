@@ -16,12 +16,12 @@ resource "null_resource" "setup_for_cassandra_backup" {
   }
 
   provisioner "file" {
-    content     = file(var.ssh_private_key_file_path)
+    content     = file(var.cassandra_backup_user_ssh_private_key_filepath)
     destination = "~/cassandra_backup_private_key"
   }
 
   provisioner "file" {
-    content     = file(var.ssh_public_key_file_path)
+    content     = file(var.cassandra_backup_user_ssh_public_key_filepath)
     destination = "~/cassandra_backup_public_key"
   }
 

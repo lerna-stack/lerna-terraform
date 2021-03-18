@@ -103,6 +103,23 @@ variable "keepalived_virtual_ips" {
   # example = ["192.168.100.100"]
 }
 
+variable "cassandra_backup_user_ssh_public_key_filepath" {
+  description = "Cassandraバックアップジョブ用ユーザが使用する SSH 公開鍵 のファイルパス"
+  type        = string
+  default     = "./resources/id_rsa_cassandra_backup_user.pub"
+}
+
+variable "cassandra_backup_user_ssh_private_key_filepath" {
+  description = <<-EOT
+  Cassandraバックアップジョブ用ユーザが使用する SSH 秘密鍵 のファイルパス
+
+  ※この秘密鍵は Cassandra サーバに配布され、開発チームで共有されます。
+  専用の鍵を新規に作成することを強く推奨します。
+  EOT
+  type        = string
+  default     = "./resources/id_rsa_cassandra_backup_user"
+}
+
 variable "nfs_instance_private_ip" {
   description = "NFS サーバの Private IP"
   type        = string
