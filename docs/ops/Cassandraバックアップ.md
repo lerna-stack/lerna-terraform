@@ -6,8 +6,6 @@ Cassandra のデータバックアップを取得できます。
 [redhat/core] の `cassandra_keyspaces` に設定したテナント名とキースペースから、
 テナントごとのキースペースが解決され、そのキースペースがバックアップされます。
 
-本作業を実施する前に、必ず [免責事項] を確認してください。
-
 ## 前提条件
 
 - バックアップは Cassandra サーバ の `/apl/cassandra_backup` に作成されます。
@@ -76,4 +74,3 @@ total 4
 [redhat/core]: /modules/service/redhat/core
 [examples/aws_ec2]: /examples/aws_ec2
 [facility-cassandra-backup.tf]: /examples/aws_ec2/facility-cassandra-backup.tf
-[免責事項]: /README.md#免責事項

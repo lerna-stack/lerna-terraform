@@ -68,12 +68,7 @@ lerna-terraform is released under the terms of the [Apache License Version 2.0](
 
 © 2020 TIS Inc.
 
-## 免責事項
-[Lerna Team] は、本リポジトリに含まれる内容について正確性には最大限の注意を払っておりますが、  
-本リポジトリに記載の情報を用いて行う一切の行為について、何らの責任を負うものではありません。
 
-
-[Lerna Team]: https://github.com/lerna-stack/
 [service/redhat/core]: modules/service/redhat/core
 [service/redhat/dev]: modules/service/redhat/dev
 [platform/aws/ec2]: modules/platform/aws/ec2
