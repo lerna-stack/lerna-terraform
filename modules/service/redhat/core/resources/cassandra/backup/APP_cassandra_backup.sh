@@ -58,9 +58,9 @@ function check_params {
 function main {
     declare -a TENANT_IDS_A=("$@")
     RC=0
-    check_params ${TENANT_IDS_A[@]}
+    check_params "${TENANT_IDS_A[@]}"
     # 各テナントが逐次実行される
-    for TENANT_ID in ${TENANT_IDS_A[@]}
+    for TENANT_ID in "${TENANT_IDS_A[@]}"
     do
         log ${RC} "Cassandra backup tenant id : ${TENANT_ID} is start."
         /opt/management/bin/APP_cassandra_backup_kick.sh ${TENANT_ID}
