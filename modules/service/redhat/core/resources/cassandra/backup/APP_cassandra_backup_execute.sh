@@ -74,7 +74,7 @@ function parse_arguments() {
     log ${RC} "TENANT_ID:$TENANT_ID"
     # Get keyspaces from config file
     readonly KEYSPACE_LIST="$2"
-    log ${RC} "KEYSPACE_LIST:${KEYSPACE_LIST[@]}"
+    log ${RC} "KEYSPACE_LIST:${KEYSPACE_LIST[*]}"
     # IP of execute host
     readonly EXECUTE_HOST="$3"
     log ${RC} "EXECUTE_HOST:$EXECUTE_HOST"
