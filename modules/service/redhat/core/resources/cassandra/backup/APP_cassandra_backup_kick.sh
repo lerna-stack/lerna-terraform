@@ -14,15 +14,10 @@ set -o pipefail
 
 readonly LOGNAME=/apl/var/log/cassandra/cassandra_backup.log
 readonly BACKUP_KEYSPACES_CONF_PATH='/opt/management/config/backup_keyspaces.conf'
-readonly NODE_BACKUP_DIR=/apl/cassandra_backup
 readonly SSH_USER='reactivejob'
-readonly EXECUTE_HOST="" # FIXME: 設定
 readonly PROD_HOSTS=("")  # FIXME: 設定
 readonly DR_HOSTS=("")  # FIXME: 設定
-readonly GENERATION_DAIRY=3
-readonly BASE_FILE_NAME=cassandra
-readonly CASSANDRA_DATA_DIR=/var/lib/cassandra/data
-readonly TENANT_ID_WITH_LEGACY_BACKUP_FILE_FORMAT=""  # FIXME: 設定
+readonly REPLICATION_FACTOR=3
 
 RC=0
 
@@ -50,9 +45,9 @@ function log {
 ###############################
 function validate_user {
   local USER=$(whoami)
-  if [[ ${USER} != "${SSH_USER}" ]] ; then
+  if [[ ${USER} != ${SSH_USER} ]] ; then
       RC=1
-      log ${RC} "please execute ${SSH_USER} user!![${USER}]"
+      log ${RC} "please execute job with user : ${SSH_USER} !![${USER}]"
       exit 1
   fi
 }
@@ -69,6 +64,23 @@ function is_valid_tenant() {
       fi
     done
     return 1
+}
+
+###############################
+#check back keyspace config file
+###############################
+function check_keysapce_config() {
+  local KEYSPACE_CONF="$1"
+  local ALL_KEYSPACE_LIST=($(/bin/echo "${KEYSPACE_CONF}"  | sed -E '/^\s*(#|$)/d' | awk '{ print $2 }'))
+  local ALL_KEYSPACE_LIST_UNIQUE=($(/bin/echo "${KEYSPACE_CONF}"  | sed -E '/^\s*(#|$)/d' | awk '{ print $2 }' | sort -u))
+  if [[ ${#ALL_KEYSPACE_LIST_UNIQUE[@]} -ne ${#ALL_KEYSPACE_LIST[@]} ]] ; then
+      RC=1
+      log ${RC} "Duplicated keyspace, every keyspace should be only once in config '/opt/management/config/backup_keyspaces.conf'."
+      exit 1
+  else
+      log ${RC} "Backup keyspace config check ok!"
+      exit 0
+  fi
 }
 
 ###############################
@@ -93,13 +105,28 @@ function parse_arguments() {
         exit 1
     fi
 
+    # Handle operation argument
+    for i in "$@"
+    do
+    case $i in
+        -c|--check)
+        check_keysapce_config "${KEYSPACE_CONF}"
+        shift # past argument=value
+        ;;
+        -*)
+        # unknown option
+        RC=1
+        log ${RC} "unknown option, please input -c|--check"
+        exit 1
+        ;;
+    esac
+    done
+
     readonly TENANT_ID="$1"
     # Get valid tenant_id list from config file
     readonly TENANT_ID_LIST=$(/bin/echo "${KEYSPACE_CONF}" | sed -E '/^\s*(#|$)/d' | awk '{ print $1 }' | sort -u)
     # Get keyspaces from config file
-    readonly KEYSPACE_LIST=$(/bin/echo "${KEYSPACE_CONF}"  | sed -E '/^\s*#/d' | awk -v tenant_id="${TENANT_ID}" 'tenant_id == $1 { print $2 }')
-    # Setting SNAPSHOT_NAME with tenant_id
-    readonly SNAPSHOT_NAME="${BASE_FILE_NAME}_${TENANT_ID}_$(date '+%Y%m%d_%H%M%S')"
+    readonly KEYSPACE_LIST=$(/bin/echo "${KEYSPACE_CONF}"  | sed -E '/^\s*(#|$)/d' | awk -v tenant_id="${TENANT_ID}" 'tenant_id == $1 { print $2 }' | sort -u)
     # Check whether the input tenant_id is valid
     is_valid_tenant "${TENANT_ID}" ; RC=${?}
     if [[ ${RC} -ne 0 ]] ; then
@@ -118,14 +145,39 @@ function main {
   RC=0
   parse_arguments "$@"
   repair
-  take_snapshot
-  mount_backup_storage
-  # 終了(正常・異常問わない)したら アンマウント して、次回実行時のマウント時エラーを回避する
-  trap "unmount_backup_storage" EXIT
-  send_archive_to_backup_server
-  rotate_archives
-  clear_snapshot
+  backup
   exit_script
+}
+
+###############################
+#backup
+###############################
+function backup {
+  # calculate subarray of PROD enviroment hosts
+  local PROD_NODE_NUM=${#PROD_HOSTS[@]}
+  local PROD_BACKUP_NODE_NUM="$(((1-${REPLICATION_FACTOR}/${PROD_NODE_NUM})*${PROD_NODE_NUM}+1))"
+  readonly PROD_BACKUP_NODES=("${PROD_HOSTS[@]:0:${PROD_BACKUP_NODE_NUM}}")
+  # take prod env backup
+  for PROD_HOST in "${PROD_BACKUP_NODES[@]}";
+  do
+      log ${RC} "Backup ${PROD_HOST} is started."
+      execute_remote_backup "${PROD_HOST}"
+  done
+}
+
+
+###############################
+#execute_remote_backup
+#remote call backup script
+###############################
+function execute_remote_backup {
+    local EXE_IP_HOST=$1
+    ssh ${SSH_USER}@${EXE_IP_HOST}  "/opt/management/bin/APP_cassandra_backup_execute.sh  '${TENANT_ID}' '${KEYSPACE_LIST}' '${EXE_IP_HOST}'"
+    if [[ ${RC} -ne 0 ]] ; then
+        log ${RC} "Backup ${EXE_IP_HOST} is abnormal end."
+    else
+        log ${RC} "Backup ${EXE_IP_HOST} is success."
+    fi
 }
 
 ###############################
@@ -164,121 +216,6 @@ function repair {
       do
           execute_remote_repair "${DR_HOST}" "${KEYSPACE}"
       done
-  done
-}
-
-###############################
-#execute_take_snapshot
-###############################
-function execute_take_snapshot {
-  local KEYSPACE=$1
-  nodetool snapshot -t "${SNAPSHOT_NAME}" "${KEYSPACE}" ; RC=${?}
-  if [[ ${RC} -ne 0 ]] ; then
-      log ${RC} "Snapshot ${KEYSPACE} ${EXECUTE_HOST} is abnormal end."
-      exit 1
-  else
-      log ${RC} "Snapshot ${KEYSPACE} ${EXECUTE_HOST} is success."
-  fi
-}
-###############################
-#snapshot
-###############################
-function take_snapshot {
-  for KEYSPACE in ${KEYSPACE_LIST}
-  do
-      execute_take_snapshot "${KEYSPACE}"
-  done
-}
-
-
-###############################
-# umount function
-###############################
-function unmount_backup_storage {
-    /opt/management/bin/APP_cassandra_mount.sh umount /apl/cassandra_backup ; RC=${?}
-    if [[ ${RC} -ne 0 ]] ; then
-        log ${RC} "umount ${EXECUTE_HOST} is abnormal end."
-        exit 1
-    else
-        log ${RC} "umount ${EXECUTE_HOST} is success."
-    fi
-}
-
-###############################
-#mount
-###############################
-function mount_backup_storage {
-  /opt/management/bin/APP_cassandra_mount.sh mount "/apl/cassandra_backup" ; RC=${?}
-  if [[ ${RC} -ne 0 ]] ; then
-      log ${RC} "mount ${EXECUTE_HOST} is abnormal end."
-      exit 1
-  else
-      log ${RC} "mount ${EXECUTE_HOST} is success."
-  fi
-}
-
-###############################
-#send backup server
-###############################
-function send_archive_to_backup_server {
-  find ${CASSANDRA_DATA_DIR} -path "*/snapshots/${SNAPSHOT_NAME}" -print0 | tar --null -cvz -T - -f /tmp/${SNAPSHOT_NAME}.tar.gz ; RC=${?}
-  if [[ ${RC} -ne 0 ]] ; then
-      log ${RC} "zip ${EXECUTE_HOST} is abnormal end."
-      exit 1
-  else
-      log ${RC} "zip ${EXECUTE_HOST} is success."
-  fi
-
-  mv /tmp/${SNAPSHOT_NAME}.tar.gz ${NODE_BACKUP_DIR} ; RC=${?}
-  if [[ ${RC} -ne 0 ]] ; then
-      log ${RC} "send backup server ${EXECUTE_HOST} is abnormal end."
-      exit 1
-  else
-      log ${RC} "send backup server ${EXECUTE_HOST} is success."
-  fi
-}
-
-###############################
-#generation
-###############################
-function rotate_archives {
-  # コマンドグループ
-  {
-      if [[ ${TENANT_ID} == ${TENANT_ID_WITH_LEGACY_BACKUP_FILE_FORMAT} ]] ; then
-          /bin/find ${NODE_BACKUP_DIR} -maxdepth 1 -name "${BASE_FILE_NAME}_[0-9][0-9][0-9][0-9]*" -or -name "${BASE_FILE_NAME}_${TENANT_ID}_*"
-      else
-          /bin/find ${NODE_BACKUP_DIR} -maxdepth 1 -name "${BASE_FILE_NAME}_${TENANT_ID}_*"
-      fi
-
-  } | xargs ls -t -dF |tail --lines=+$((GENERATION_DAIRY+1)) | xargs -I% rm -rf % ;RC=${?}
-  if [[ ${RC} -ne 0 ]] ; then
-      log ${RC} "generation ${EXECUTE_HOST} is abnormal end."
-      exit 1
-  else
-      log ${RC} "generation ${EXECUTE_HOST} is success."
-  fi
-}
-
-###############################
-#claer snapshot
-###############################
-function execute_clear_snapshot {
-  local KEYSPACE=$1
-  nodetool clearsnapshot "${KEYSPACE}" ; RC=${?}
-  if [[ ${RC} -ne 0 ]] ; then
-      log ${RC} "delete snapshot ${KEYSPACE} ${EXECUTE_HOST} is abnormal end."
-      exit 1
-  else
-      log ${RC} "delete snapshot ${KEYSPACE} ${EXECUTE_HOST} is success."
-  fi
-}
-###############################
-#claer snapshot
-###############################
-function clear_snapshot {
-  for KEYSPACE in ${KEYSPACE_LIST}
-  do
-      execute_clear_snapshot "${KEYSPACE}"
   done
 }
 
