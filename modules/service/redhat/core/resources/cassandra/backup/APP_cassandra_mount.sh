@@ -17,6 +17,8 @@ LOGNAME=/apl/var/log/cassandra/cassandra_backup.log
 log() {
     local RC=${1}
     local MSG=${2}
+    local base_dir
+    base_dir=$(basename "$0")
 
     if [ "${RC}" = "0" ]; then
         local LEVEL=INFO
@@ -24,7 +26,7 @@ log() {
         local LEVEL=ERROR
     fi
 
-    /bin/echo -e "`date +%Y/%m/%d\ %H:%M:%S`\t`basename $0`\t`whoami`\texit_code:${RC}\t${LEVEL}\t${MSG}" | tee --append ${LOGNAME}
+    /bin/echo -e "$(date +%Y/%m/%d\ %H:%M:%S)\t${base_dir}\t$(whoami)\texit_code:${RC}\t${LEVEL}\t${MSG}" | tee --append ${LOGNAME}
 }
 
 ###############################
