@@ -74,7 +74,7 @@ case ${MTYPE} in
       ;;
    *      )
       RC=1
-      log ${RC} "Please input "mount" or "umount""
+      log ${RC} "Please input \"mount\" or \"umount\""
       exit 1
       ;;
 esac
