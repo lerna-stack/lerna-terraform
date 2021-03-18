@@ -9,6 +9,14 @@ resource "null_resource" "setup_for_cassandra_backup" {
     module.lerna_stack_service_redhat_core
   ]
 
+  triggers = {
+    ssh_private_key = filemd5(var.cassandra_backup_user_ssh_private_key_filepath)
+    ssh_public_key  = filemd5(var.cassandra_backup_user_ssh_public_key_filepath)
+    # TODO Trigger this resource when any backup scripts are updated.
+    #   Uncomment below to trigger this resource always if you want.
+    #   always = uuid()
+  }
+
   connection {
     host        = module.lerna_stack_platform_aws_ec2.cassandra_instance_ips[count.index]
     user        = module.lerna_stack_platform_aws_ec2.ssh_user
