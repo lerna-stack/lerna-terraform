@@ -166,6 +166,7 @@ function backup {
   # take prod env backup
   for PROD_HOST in "${PROD_BACKUP_NODES[@]}";
   do
+      RC=0
       log ${RC} "Backup ${PROD_HOST} is started."
       execute_remote_backup "${PROD_HOST}"
   done
@@ -179,6 +180,7 @@ function backup {
 function execute_remote_backup {
     local EXE_IP_HOST=$1
     ssh "${SSH_USER}@${EXE_IP_HOST}"  "/opt/management/bin/APP_cassandra_backup_execute.sh  '${TENANT_ID}' '${KEYSPACE_LIST}' '${EXE_IP_HOST}'"
+    RC=${?}
     if [[ ${RC} -ne 0 ]] ; then
         log ${RC} "Backup ${EXE_IP_HOST} is abnormal end."
     else
