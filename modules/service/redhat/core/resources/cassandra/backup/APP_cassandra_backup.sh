@@ -63,7 +63,7 @@ function main {
     for TENANT_ID in "${TENANT_IDS_A[@]}"
     do
         log ${RC} "Cassandra backup tenant id : ${TENANT_ID} is start."
-        /opt/management/bin/APP_cassandra_backup_kick.sh ${TENANT_ID}
+        /opt/management/bin/APP_cassandra_backup_kick.sh "${TENANT_ID}"
         RC=${?}
         if [[ ${RC} -ne 0 ]] ; then
             log ${RC} "Cassandra backup tenant id : ${TENANT_ID} is abnormal end."

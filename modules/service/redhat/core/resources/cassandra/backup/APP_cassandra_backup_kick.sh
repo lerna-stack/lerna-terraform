@@ -174,7 +174,7 @@ function backup {
 ###############################
 function execute_remote_backup {
     local EXE_IP_HOST=$1
-    ssh ${SSH_USER}@${EXE_IP_HOST}  "/opt/management/bin/APP_cassandra_backup_execute.sh  '${TENANT_ID}' '${KEYSPACE_LIST}' '${EXE_IP_HOST}'"
+    ssh "${SSH_USER}@${EXE_IP_HOST}"  "/opt/management/bin/APP_cassandra_backup_execute.sh  '${TENANT_ID}' '${KEYSPACE_LIST}' '${EXE_IP_HOST}'"
     if [[ ${RC} -ne 0 ]] ; then
         log ${RC} "Backup ${EXE_IP_HOST} is abnormal end."
     else
@@ -189,7 +189,7 @@ function execute_remote_backup {
 function execute_remote_repair() {
     local IP_HOST=$1
     local KEYSPACE=$2
-    ssh ${SSH_USER}@${IP_HOST} nodetool repair -pr "${KEYSPACE}" ; RC=${?}
+    ssh "${SSH_USER}@${IP_HOST}" nodetool repair -pr "${KEYSPACE}" ; RC=${?}
     if [[ ${RC} -ne 0 ]] ; then
         log ${RC} "Repair ${IP_HOST} is abnormal end."
     else
