@@ -16,9 +16,12 @@ Cassandra のデータバックアップを取得できます。
 - ユーザ `reactivejob` を手動で作成しておく必要があります。
 - `/opt/management/bin/APP_cassandra_backup_kick.sh` にバックアップ対象の Cassandra サーバの IP アドレスが変数(`PROD_HOSTS`, `DR_HOSTS`) にハードコードされています。  
   バックアップスクリプトを起動する Cassandra サーバにインストールされている `/opt/management/bin/APP_cassandra_backup_kick.sh` の変数を手動で書き換える必要があります。
-- 1つのCassandraノードのみをバックアップ対象とします。  
-  Cassandra クラスタに参加しているすべてのノードにデータがレプリケーションされていることを想定しています。  
-  キースペースの レプリケーションファクタ が Cassandra クラスタのノード数よりも小さい場合はサポートしていません。
+- バックアップ対象とするキースペースのレプリケーションファクタは 3 以上 である必要があります。  
+  バックアップスクリプトはレプリケーションファクタが 3 以上であることを想定して動作します。
+- 複数の Cassandra サーバ(ノード) をバックアップします。  
+  バックアップ対象となる Cassandra ノード数は、Cassandra クラスタの合計ノード数から計算されます。  
+  詳細は [Cassandraバックアップ方式] をご覧ください。  
+  キースペースの レプリケーションファクタ が、*3* 未満である場合はサポートされていません。
 - `/apl/cassandra_backup` に最大で4世代分(最新1世代＋過去3世代)のログを残すようになっています。  
   ログファイル肥大化防止のため、バックアップスクリプトは5世代以上のログが存在する場合、  
   新しい4世代分のみを残すようにそれ以外のログ以外を削除します。  
@@ -35,26 +38,33 @@ ssh で接続するユーザは `reactivejob` を使用してください。
 このコマンドでは、 [redhat/core] の `cassandra_keyspaces` に テナント `example` を設定しており、
 `example` に関連付けられた キースペース のバックアップを取得する例を示しています。  
 
-※`host="10.0.1.61"` は、CassandraサーバのIPアドレスに適切に置換してください。  
+※ IP`10.0.1.61` は、CassandraサーバのIPアドレスに適切に置換してください。  
 ※`example` は取得するテナント名に適切に変更してください。
 
 ```shell
-$ host="10.0.1.61"
-$ ssh reactivejob@${host} nohup /opt/management/bin/APP_cassandra_backup.sh example
+$ ssh reactivejob@10.0.1.61
+[reactivejob@10.0.1.61]$ /opt/management/bin/APP_cassandra_backup.sh example
 # (... truncated)
-2021/03/17 02:56:07     APP_cassandra_backup.sh reactivejob     exit_code:0     INFO    Cassandra backup tenant id : example is success.
+2021/03/19 03:21:40     APP_cassandra_backup.sh reactivejob     exit_code:0     INFO    Cassandra backup tenant id : example is success.
 ```
 
 バックアップが完了すると、`/apl/cassandra_back` にマウントされるデバイスにバックアップファイルが作成されています。  
-バックアップファイルの名前は、`cassandra_{tenant}_{datetime}.tar.gz` となっています。  
+バックアップファイルの名前は、`cassandra_{tenant}_{cassandra_node_ipaddr}_{datetime}.tar.gz` となっています。  
 取得したバックアップファイル一覧は次のように確認できます。  
+
+この例では、Cassandra クラスタが4台で構成されているため、2台分のバックアップが取得されています。  
+バックアップのノード数を決める計算方法は [Cassandraバックアップ方式] を確認してください。  
+リストアではここで取得した2台分のバックアップが必要となります。  
+ここで取得したバックアップをすべて保存しておくようにしてください。  
+バックアップファイルが不足している場合には完全なリストアができません。
 
 ```shell
 $ ssh reactivejob@10.0.1.61
 [reactivejob@10.0.1.61]$ mount /apl/cassandra_backup 
 [reactivejob@10.0.1.61]$ ls -l /apl/cassandra_backup 
-total 4
--rw-rw-r--. 1 reactivejob reactivejob 1828 Mar 17 03:15 cassandra_example_20210317_031522.tar.gz
+total 16
+-rw-rw-r--. 1 reactivejob reactivejob 7579 Mar 19 03:21 cassandra_example_10.0.1.61_20210319_032137.tar.gz
+-rw-rw-r--. 1 reactivejob reactivejob 5679 Mar 19 03:21 cassandra_example_10.0.1.62_20210319_032139.tar.gz
 [reactivejob@10.0.1.61]$ umount /apl/cassandra_backup
 ```
 
@@ -78,3 +88,4 @@ total 4
 [redhat/core]: /modules/service/redhat/core
 [examples/aws_ec2]: /examples/aws_ec2
 [facility-cassandra-backup.tf]: /examples/aws_ec2/facility-cassandra-backup.tf
+[Cassandraバックアップ方式]: /docs/dev/Cassandraバックアップ方式
