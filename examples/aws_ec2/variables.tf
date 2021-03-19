@@ -110,12 +110,7 @@ variable "cassandra_backup_user_ssh_public_key_filepath" {
 }
 
 variable "cassandra_backup_user_ssh_private_key_filepath" {
-  description = <<-EOT
-  Cassandraバックアップジョブ用ユーザが使用する SSH 秘密鍵 のファイルパス
-
-  ※この秘密鍵は Cassandra サーバに配布され、開発チームで共有されます。
-  専用の鍵を新規に作成することを強く推奨します。
-  EOT
+  description = "Cassandraバックアップジョブ用ユーザが使用する SSH 秘密鍵 のファイルパス。※この秘密鍵は、Cassandra サーバに配布され、開発チームで共有されます。専用の鍵を新規に作成することを強く推奨します。"
   type        = string
   default     = "./resources/id_rsa_cassandra_backup_user"
 }
