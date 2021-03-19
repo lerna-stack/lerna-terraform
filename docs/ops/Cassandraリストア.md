@@ -180,6 +180,9 @@ $ sudo mv \
   -t /var/lib/cassandra/data/akka_example/tag_write_progress-aa987c10886011ebab97a3af832d5902/ \
       var/lib/cassandra/data/akka_example/tag_write_progress-aa987c10886011ebab97a3af832d5902/snapshots/cassandra_example_10.0.1.61_20210319_032137/*
 
+# Set owner&group as `cassandra`
+$ sudo chown -R cassandra:cassandra /var/lib/cassandra/data/akka_example
+
 # Reload SSTable
 $ nodetool refresh -- akka_example all_persistence_ids
 $ nodetool refresh -- akka_example messages
