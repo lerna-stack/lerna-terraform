@@ -168,6 +168,7 @@ data "template_file" "app_service_override" {
   template = <<-EOF
   [Service]
   Environment="JAVA_HOME=${var.app_java_home}"
+  TimeoutStopSec=${var.app_stop_timeout_sec}
   LimitNOFILE=1048576
   LimitNPROC=32768
   LimitAS=infinity

@@ -69,7 +69,7 @@ lerna-terraform is released under the terms of the [Apache License Version 2.0](
 © 2020 TIS Inc.
 
 
-[service/redhat/core]: modules/service/redhat/core
+[service/redhat/core]: modules/service/redhat/core/README.md
 [service/redhat/dev]: modules/service/redhat/dev
 [platform/aws/ec2]: modules/platform/aws/ec2
 [RedHatEnterpriseLinux利用ガイド]: docs/dev/RedHatEnterpriseLinux7利用ガイド.md
