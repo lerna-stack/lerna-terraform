@@ -50,9 +50,9 @@ function log {
 ###############################
 function validate_user {
   local USER=$(whoami)
-  if [[ ${USER} != "reactivejob" ]] ; then
+  if [[ ${USER} != "${SSH_USER}" ]] ; then
       RC=1
-      log ${RC} "please execute reactivejob user!![${USER}]"
+      log ${RC} "please execute ${SSH_USER} user!![${USER}]"
       exit 1
   fi
 }
@@ -162,7 +162,7 @@ function repair {
   do
       for KEYSPACE in ${KEYSPACE_LIST}
       do
-          execute_remote_repair "${PROD_HOST}" "${KEYSPACE}"
+          execute_remote_repair "${DR_HOST}" "${KEYSPACE}"
       done
   done
 }
@@ -221,7 +221,7 @@ function mount_backup_storage {
 #send backup server
 ###############################
 function send_archive_to_backup_server {
-  find ${CASSANDRA_DATA_DIR} -path "*/snapshots/${SNAPSHOT_NAME}" -print0 | tar -cvz -T - --null -f /tmp/${SNAPSHOT_NAME}.tar.gz ; RC=${?}
+  find ${CASSANDRA_DATA_DIR} -path "*/snapshots/${SNAPSHOT_NAME}" -print0 | tar --null -cvz -T - -f /tmp/${SNAPSHOT_NAME}.tar.gz ; RC=${?}
   if [[ ${RC} -ne 0 ]] ; then
       log ${RC} "zip ${EXECUTE_HOST} is abnormal end."
       exit 1

@@ -44,6 +44,18 @@ variable "ssh_user" {
   default     = "centos"
 }
 
+variable "ssh_public_key_file_path" {
+  description = "SSH 公開鍵 のファイルパス"
+  type        = string
+  default     = "~/.ssh/id_rsa.pub"
+}
+
+variable "ssh_private_key_file_path" {
+  description = "SSH 秘密鍵 のファイルパス"
+  type        = string
+  default     = "~/.ssh/id_rsa"
+}
+
 variable "app_rpm_path" {
   description = "アプリケーションの RPM ファイルの絶対パス"
   default     = "./resources/lerna-sample-payment-app-1.0.0-1.noarch.rpm"
@@ -89,4 +101,22 @@ variable "keepalived_virtual_ips" {
   type        = list(string)
   description = "Keepalived が付与する仮想 IP（サブネットの範囲外の IP を指定）"
   # example = ["192.168.100.100"]
+}
+
+variable "cassandra_backup_user_ssh_public_key_filepath" {
+  description = "Cassandraバックアップジョブ用ユーザが使用する SSH 公開鍵 のファイルパス"
+  type        = string
+  default     = "./resources/id_rsa_cassandra_backup_user.pub"
+}
+
+variable "cassandra_backup_user_ssh_private_key_filepath" {
+  description = "Cassandraバックアップジョブ用ユーザが使用する SSH 秘密鍵 のファイルパス。※この秘密鍵は、Cassandra サーバに配布され、開発チームで共有されます。専用の鍵を新規に作成することを強く推奨します。"
+  type        = string
+  default     = "./resources/id_rsa_cassandra_backup_user"
+}
+
+variable "nfs_instance_private_ip" {
+  description = "NFS サーバの Private IP"
+  type        = string
+  # example = "10.0.0.1"
 }

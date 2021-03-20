@@ -38,7 +38,20 @@ OS のリポジトリにあるバージョンは古い場合があるため、�
 
 作成された RPM ファイル `keepalived-2.0.16-1.x86_64.rpm` を [resources] に配置してください。
 
-### 2. 環境設定
+### 2. SSH鍵の作成
+
+Cassandra バックアップジョブ用ユーザの SSH Key を生成しておきます。  
+
+※この秘密鍵は Cassandra サーバに配布され、開発チームで共有されます。
+専用の鍵を新規に作成することを強く推奨します。
+
+SSH Key を生成するには次のコマンドを実行してください。
+
+```shell
+ssh-keygen -f './resources/id_rsa_cassandra_backup_user' -t rsa -N ' '
+```
+
+### 3. 環境設定
 
 `terraform.tfvars.example` を同じディレクトリにコピーし、`terraform.tfvars` を作成します。
 
