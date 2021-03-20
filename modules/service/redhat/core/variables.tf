@@ -216,6 +216,12 @@ variable "app_dump_dir" {
   default     = "/var/log"
 }
 
+variable "app_stop_timeout_sec" {
+  type        = string
+  description = "アプリ停止のタイムアウト値"
+  default     = "5min"
+}
+
 variable "app_arguments" {
   type        = list(string)
   description = "プロジェクト特有のアプリケーションの起動引数。リストの index は app_cluster_hosts と対応し、設定が app_cluster_hosts と対応する各サーバーに配置されます"
