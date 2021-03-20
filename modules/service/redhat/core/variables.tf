@@ -219,7 +219,7 @@ variable "app_dump_dir" {
 variable "app_stop_timeout_sec" {
   type        = string
   description = "アプリ停止のタイムアウト値"
-  default     = "5s"
+  default     = "5min"
 }
 
 variable "app_arguments" {

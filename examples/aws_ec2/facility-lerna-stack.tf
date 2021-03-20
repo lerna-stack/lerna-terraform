@@ -126,7 +126,7 @@ module "lerna_stack_service_redhat_core" {
   app_dump_dir = "/apl/var/log"
 
   # アプリ停止のタイムアウト値
-  //app_stop_timeout_sec = "5s"
+  //app_stop_timeout_sec = "5min"
 
   # プロジェクト特有のアプリケーションの起動引数。リストの index は app_cluster_hosts と対応し、設定が app_cluster_hosts と対応する各サーバーに配置されます
   app_arguments = data.template_file.app_arguments.*.rendered

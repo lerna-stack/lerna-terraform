@@ -8,7 +8,9 @@ lerna-terraform に関する注目すべき変更はこのファイルで文書�
 - Red Hat Enterprise Linux 7 (RHEL7) に対応する
   - [RedHatEnterpriseLinux7利用ガイド](docs/dev/RedHatEnterpriseLinux7利用ガイド.md)
 - アプリ停止のタイムアウト値を設定可能にします  
-  `app_stop_timeout_sec` で設定できます。
+  `app_stop_timeout_sec` で設定できます。  
+  アプリケーションのグレースフルシャットダウンよりも十分な時間にするため、  
+  デフォルト値を 5秒 から 5分 に変更します。
 
 ## v1.0.0
 初回リリース
