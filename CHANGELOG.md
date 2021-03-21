@@ -11,6 +11,15 @@ lerna-terraform に関する注目すべき変更はこのファイルで文書�
   `app_stop_timeout_sec` で設定できます。  
   アプリケーションのグレースフルシャットダウンよりも十分な時間にするため、  
   デフォルト値を 5秒 から 5分 に変更します。
+- Cassandraバックアップ方式を刷新します
+    - 新方式は `レプリケーションファクタ < ノード数` の場合をサポートします  
+      詳細は [Cassandraバックアップ方式](docs/dev/Cassandraバックアップ方式.md) をご確認ください。
+    - Cassandraバックアップのシェルスクリプトを刷新します  
+      スクリプトに記載している Cassandra サーバの IP アドレス (`PROD_HOSTS`, `DR_HOSTS`) を再び書き換える必要があります。
+    - バックアップファイルの命名規則を変更します  
+      詳細は [Cassandraバックアップ](docs/ops/Cassandraバックアップ.md) をご確認ください。
+    - バックアップとリストアの手順を変更します  
+      詳細は [Cassandraバックアップ](docs/ops/Cassandraバックアップ.md) と [Cassandraリストア](docs/ops/Cassandraリストア.md) をご確認ください。
 
 ## v1.0.0
 初回リリース

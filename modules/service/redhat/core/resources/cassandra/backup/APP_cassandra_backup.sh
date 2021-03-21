@@ -18,6 +18,8 @@ readonly LOGNAME=/apl/var/log/cassandra/cassandra_backup.log
 ###############################
 function log {
     local RC="${1}" MSG="${2}"
+    local base_dir
+    base_dir=$(basename "$0")
 
     if [[ "${RC}" = "0" ]]; then
         local LEVEL=INFO
@@ -25,7 +27,7 @@ function log {
         local LEVEL=ERROR
     fi
 
-    /bin/echo -e "$(date +%Y/%m/%d\ %H:%M:%S)\t$(basename $0)\t$(whoami)\texit_code:${RC}\t${LEVEL}\t${MSG}" | tee --append ${LOGNAME}
+    /bin/echo -e "$(date +%Y/%m/%d\ %H:%M:%S)\t${base_dir}\t$(whoami)\texit_code:${RC}\t${LEVEL}\t${MSG}" | tee --append ${LOGNAME}
 }
 ###############################
 #check parameter
@@ -34,7 +36,8 @@ function check_params {
     declare -a PARAMS_A=("$@")
     local LEN=${#PARAMS_A[@]}
     # Sort array as unique
-    local SORTED_UNIQUE_TENANT_IDS_A=($(echo "${PARAMS_A[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' '))
+    local SORTED_UNIQUE_TENANT_IDS_A=()
+    read -r -a SORTED_UNIQUE_TENANT_IDS_A <<< "$(echo "${PARAMS_A[@]}" | tr ' ' '\n' | sort -u | tr '\n' ' ')"
     local LEN_SU=${#SORTED_UNIQUE_TENANT_IDS_A[@]}
     # Check if parameter is empty
     if [[ LEN -eq 0 ]] ; then
@@ -56,12 +59,12 @@ function check_params {
 function main {
     declare -a TENANT_IDS_A=("$@")
     RC=0
-    check_params ${TENANT_IDS_A[@]}
+    check_params "${TENANT_IDS_A[@]}"
     # 各テナントが逐次実行される
-    for TENANT_ID in ${TENANT_IDS_A[@]}
+    for TENANT_ID in "${TENANT_IDS_A[@]}"
     do
         log ${RC} "Cassandra backup tenant id : ${TENANT_ID} is start."
-        /opt/management/bin/APP_cassandra_backup_kick.sh ${TENANT_ID}
+        /opt/management/bin/APP_cassandra_backup_kick.sh "${TENANT_ID}"
         RC=${?}
         if [[ ${RC} -ne 0 ]] ; then
             log ${RC} "Cassandra backup tenant id : ${TENANT_ID} is abnormal end."

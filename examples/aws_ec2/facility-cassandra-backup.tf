@@ -85,16 +85,18 @@ resource "null_resource" "setup_for_cassandra_backup" {
 
     ### Reconcile scripts ###
 
-    # HACK, this procedure will be broken for the future
+    # HACK, this procedure will be broken in the future
     : Replace PROD_HOSTS
     readonly PROD_HOSTS='${join(" ", formatlist("\"%s\"", module.lerna_stack_platform_aws_ec2.cassandra_instance_ips))}'
     sudo sed -e '/^readonly PROD_HOSTS=/s/.*/readonly PROD_HOSTS=\('"$${PROD_HOSTS}"'\)/' \
        -i.bak /opt/management/bin/APP_cassandra_backup_kick.sh
 
-    # HACK, this procedure will be broken for the future
+    # HACK, this procedure will be broken in the future
     : Replace SSH User
     sudo sed -e '/^readonly SSH_USER=/s/.*/readonly SSH_USER="'"$cassandra_backup_user"'"/' \
        -i.bak /opt/management/bin/APP_cassandra_backup_kick.sh
+    sudo sed -e '/^readonly SSH_USER=/s/.*/readonly SSH_USER="'"$cassandra_backup_user"'"/' \
+       -i.bak /opt/management/bin/APP_cassandra_backup_execute.sh
 
     EOC
     ]

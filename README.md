@@ -53,6 +53,10 @@ Service layer modules を単独で利用することで、プライベートク�
   - [マイグレーションガイド](MIGRATION.md)  
     メジャーバージョンには破壊的変更が含まれることがあります。  
     メジャーバージョンを更新する際には、必ずマイグレーションガイドを確認してください。
+  - [Cassandraバックアップ]  
+    Cassandra のバックアップ方法を確認できます
+  - [Cassandraリストア]  
+    Cassandra のリストア方法を確認できます
 
 ## Contributing
 
@@ -73,3 +77,5 @@ lerna-terraform is released under the terms of the [Apache License Version 2.0](
 [service/redhat/dev]: modules/service/redhat/dev
 [platform/aws/ec2]: modules/platform/aws/ec2
 [RedHatEnterpriseLinux利用ガイド]: docs/dev/RedHatEnterpriseLinux7利用ガイド.md
+[Cassandraバックアップ]: docs/ops/Cassandraバックアップ.md
+[Cassandraリストア]: docs/ops/Cassandraリストア.md

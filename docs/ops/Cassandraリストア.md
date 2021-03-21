@@ -126,11 +126,13 @@ TRUNCATE akka_example.all_persistence_ids;
 EOF
 ```
 
-### 5. Cassandra ノードに データを投入する
+### 5. Cassandra ノードにデータを投入する
 
-※いずれか1つの Cassandra ノードで、次の手順を実施します。
+※ バックアップを取得されたノードにデータを投入します。
 
-バックアップデータを、Cassandra ノードに投入します。
+バックアップデータを、Cassandra ノードに投入します。  
+ここでは1つのノードにデータを投入する手順を示します。  
+**バックアップデータが複数ある場合には、それぞれのバックアップデータを対応する Cassandra ノードに投入してください。**  
 
 Cassandra ノードにデータを投入するため、次のコマンドを実行してください。  
 ※ 投入するデータは適切に変更してください。  
@@ -144,37 +146,42 @@ Cassandra ノードにデータを投入するため、次のコマンドを実�
 
 ```
 # Copy backup data from your backup storage
-$ mount /apl/cassandra_backup
-$ ls /apl/cassandra_backup/
-cassandra_example_20210317_070616.tar.gz
-$ cp /apl/cassandra_backup/cassandra_example_20210317_070616.tar.gz ./
-$ umount /apl/cassandra_backup/
+[centos@10-0-1-61]$ mount /apl/cassandra_backup
+[centos@10-0-1-61]$ ls /apl/cassandra_backup
+cassandra_example_10.0.1.61_20210319_032137.tar.gz  cassandra_example_10.0.1.62_20210319_032139.tar.gz
+# 投入するノードと同じ IP アドレスのバックアップデータを使用してください
+[centos@10-0-1-61]$ cp /apl/cassandra_backup/cassandra_example_10.0.1.61_20210319_032137.tar.gz ./
+[centos@10-0-1-61]$ umount /apl/cassandra_backup
 
 # Extract files from backup data
 $ tar xfvz cassandra_example_20210317_070616.tar.gz
-$  ls var/lib/cassandra/data/akka_example/
-all_persistence_ids-983b8cb086ee11eba721a1b7cb371e77  metadata-97afee8086ee11eba721a1b7cb371e77      tag_views-95e73c7086ee11eba721a1b7cb371e77
-messages-95789c2086ee11eba721a1b7cb371e77             tag_scanning-97440d5086ee11eba721a1b7cb371e77  tag_write_progress-967c779086ee11eba721a1b7cb371e7
+# (truncated...)
+$   ls var/lib/cassandra/data/akka_example/
+all_persistence_ids-ac59b410886011ebab97a3af832d5902  metadata-abb0c9e0886011ebab97a3af832d5902      tag_views-aa6a6730886011ebab97a3af832d5902
+messages-a9b9dbe0886011ebab97a3af832d5902             tag_scanning-ab241a40886011ebab97a3af832d5902  tag_write_progress-aa987c10886011ebab97a3af832d590
 
 # Place backup files to /var/lib/cassandra/data
 $ sudo mv \
-  -t /var/lib/cassandra/data/akka_example/all_persistence_ids-983b8cb086ee11eba721a1b7cb371e77/ \
-   var/lib/cassandra/data/akka_example/all_persistence_ids-983b8cb086ee11eba721a1b7cb371e77/snapshots/cassandra_example_20210317_070616/*
+  -t /var/lib/cassandra/data/akka_example/all_persistence_ids-ac59b410886011ebab97a3af832d5902/ \
+      var/lib/cassandra/data/akka_example/all_persistence_ids-ac59b410886011ebab97a3af832d5902/snapshots/cassandra_example_10.0.1.61_20210319_032137/*
 $ sudo mv \
-  -t /var/lib/cassandra/data/akka_example/messages-95789c2086ee11eba721a1b7cb371e77/ \
-      var/lib/cassandra/data/akka_example/messages-95789c2086ee11eba721a1b7cb371e77/snapshots/cassandra_example_20210317_070616/*
+  -t /var/lib/cassandra/data/akka_example/messages-a9b9dbe0886011ebab97a3af832d5902/ \
+      var/lib/cassandra/data/akka_example/messages-a9b9dbe0886011ebab97a3af832d5902/snapshots/cassandra_example_10.0.1.61_20210319_032137/*
 $ sudo mv \
-  -t /var/lib/cassandra/data/akka_example/metadata-97afee8086ee11eba721a1b7cb371e77/ \
-      var/lib/cassandra/data/akka_example/metadata-97afee8086ee11eba721a1b7cb371e77/snapshots/cassandra_example_20210317_070616/*
+  -t /var/lib/cassandra/data/akka_example/metadata-abb0c9e0886011ebab97a3af832d5902/ \
+      var/lib/cassandra/data/akka_example/metadata-abb0c9e0886011ebab97a3af832d5902/snapshots/cassandra_example_10.0.1.61_20210319_032137/*
 $ sudo mv \
-  -t /var/lib/cassandra/data/akka_example/tag_scanning-97440d5086ee11eba721a1b7cb371e77/ \
-      var/lib/cassandra/data/akka_example/tag_scanning-97440d5086ee11eba721a1b7cb371e77/snapshots/cassandra_example_20210317_070616/*
+  -t /var/lib/cassandra/data/akka_example/tag_scanning-ab241a40886011ebab97a3af832d5902/ \
+      var/lib/cassandra/data/akka_example/tag_scanning-ab241a40886011ebab97a3af832d5902/snapshots/cassandra_example_10.0.1.61_20210319_032137/*
 $ sudo mv \
-  -t /var/lib/cassandra/data/akka_example/tag_views-95e73c7086ee11eba721a1b7cb371e77/ \
-      var/lib/cassandra/data/akka_example/tag_views-95e73c7086ee11eba721a1b7cb371e77/snapshots/cassandra_example_20210317_070616/*
+  -t /var/lib/cassandra/data/akka_example/tag_views-aa6a6730886011ebab97a3af832d5902/ \
+      var/lib/cassandra/data/akka_example/tag_views-aa6a6730886011ebab97a3af832d5902/snapshots/cassandra_example_10.0.1.61_20210319_032137/*
 $ sudo mv \
-  -t /var/lib/cassandra/data/akka_example/tag_write_progress-967c779086ee11eba721a1b7cb371e77/ \
-      var/lib/cassandra/data/akka_example/tag_write_progress-967c779086ee11eba721a1b7cb371e77/snapshots/cassandra_example_20210317_070616/*
+  -t /var/lib/cassandra/data/akka_example/tag_write_progress-aa987c10886011ebab97a3af832d5902/ \
+      var/lib/cassandra/data/akka_example/tag_write_progress-aa987c10886011ebab97a3af832d5902/snapshots/cassandra_example_10.0.1.61_20210319_032137/*
+
+# Set owner&group as `cassandra`
+$ sudo chown -R cassandra:cassandra /var/lib/cassandra/data/akka_example
 
 # Reload SSTable
 $ nodetool refresh -- akka_example all_persistence_ids
@@ -187,9 +194,7 @@ $ nodetool refresh -- akka_example tag_write_progress
 
 ### 6. Cassandraノードで リペアを実行する
 
-※ Cassandra クラスタにデータを投入したノード**以外** のすべてのノードで次の手順を実施してください。
-
-Cassandra クラスタにデータを投入したノード**以外** のすべてのノードをリペアを実行します。
+※ すべての Cassandra ノードで次の手順を実施してください。
 
 リペアを行うために、次のコマンドを実行してください。
 ```shell
