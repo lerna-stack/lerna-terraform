@@ -220,7 +220,9 @@ data "template_file" "haproxy_cfg_section" {
       bind ipv4@${var.haproxy_cluster_hosts[tenant][count.index]}:80
       # ヘルスチェックのときはアクセスログ出力しない
       http-request set-log-level debug if { path_beg /health }
-      default_backend health-check
+      acl is_active_backend nbsrv(app-${tenant}-${local.section_id}) gt 0
+      use_backend health-check if is_active_backend
+      default_backend maintenance-error
   %{endfor}
 
   %{for tenant in var.active_tenants}
