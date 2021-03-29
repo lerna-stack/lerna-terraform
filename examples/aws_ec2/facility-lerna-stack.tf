@@ -185,6 +185,7 @@ data "template_file" "app_arguments" {
   ### Basics
   -Dakka.cluster.min-nr-of-members=1
   -Dakka.remote.artery.canonical.hostname=${module.lerna_stack_platform_aws_ec2.app_instance_ips[count.index]}
+  -Dkamon.environment.host=${module.lerna_stack_platform_aws_ec2.app_instance_ips[count.index]}
   -Dkamon.system-metrics.host.sigar-native-folder=native/1
   -Dreactive.logs_dir=/apl/var/log/lerna-sample-payment-app
   -Djp.co.tis.lerna.payment.server-mode=PRODUCTION

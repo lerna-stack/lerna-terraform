@@ -10,9 +10,8 @@ resource "null_resource" "setup_for_mock_server" {
   depends_on = [module.lerna_stack_service_redhat_core]
 
   triggers = {
-    docker_compose  = md5(data.template_file.docker_compose.rendered)
-    http_proxy_conf = md5(data.template_file.http_proxy_conf.rendered)
-    app_rpm         = filemd5(var.app_rpm_path)
+    app_rpm             = filemd5(var.app_rpm_path)
+    mock_server_service = md5(data.template_file.mock_server_service.rendered)
   }
 
   connection {
@@ -22,13 +21,8 @@ resource "null_resource" "setup_for_mock_server" {
   }
 
   provisioner "file" {
-    content     = data.template_file.docker_compose.rendered
-    destination = "/tmp/docker-compose.yml"
-  }
-
-  provisioner "file" {
-    content     = data.template_file.http_proxy_conf.rendered
-    destination = "/tmp/http-proxy.conf"
+    content     = data.template_file.mock_server_service.rendered
+    destination = "/tmp/mock-server.service"
   }
 
   provisioner "remote-exec" {
@@ -37,46 +31,19 @@ resource "null_resource" "setup_for_mock_server" {
     set -Cex
 
     sudo -E yum update -y
-    sudo -E yum install -y unzip wget
+    sudo -E yum install -y curl
 
-    # Install Docker Engine
-    # https://docs.docker.com/engine/install/centos/#install-using-the-repository
-    sudo -E yum install -y yum-utils
-    sudo -E yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-    sudo -E yum install -y docker-ce docker-ce-cli containerd.io
+    # Install Node.js v12.x
+    # https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions-1
+    curl -fsSL https://rpm.nodesource.com/setup_12.x | sudo bash -
+    sudo -E yum install -y nodejs
 
-    # Configure HTTP Proxy used by Docker
-    # https://docs.docker.com/config/daemon/systemd/#httphttps-proxy
-    sudo mkdir -p /etc/systemd/system/docker.service.d
-    cat /tmp/http-proxy.conf | sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf
-
-    # Install Docker Compose
-    # https://docs.docker.com/compose/install/#install-compose-on-linux-systems
-    curl -L https://github.com/docker/compose/releases/download/1.28.5/docker-compose-`uname -s`-`uname -m` | sudo tee /usr/local/bin/docker-compose > /dev/null
-    sudo chmod +x /usr/local/bin/docker-compose
-
-    sudo gpasswd -a ${var.ssh_user} docker
+    sudo --askpass install --owner=root --group=lv4 --mode=0664 /tmp/mock-server.service /usr/lib/systemd/system/mock-server.service
     sudo systemctl daemon-reload
-    sudo systemctl restart docker
-    sudo systemctl enable docker
+    sudo systemctl restart mock-server
+    sudo systemctl enable mock-server
 
-    cat /tmp/docker-compose.yml | sudo tee ./docker-compose.yml
-
-    # Cleanup
-    rm -f /tmp/docker-compose.yml
-    rm -f /tmp/http-proxy.conf
-
-    EOC
-    ]
-  }
-
-  provisioner "remote-exec" {
-    inline = [<<-EOC
-
-    set -Cex
-
-    # Rebuild docker images & Restart docker containers
-    docker-compose up -d --build --force-recreate
+    rm /tmp/mock-server.service
 
     EOC
     ]
@@ -84,41 +51,23 @@ resource "null_resource" "setup_for_mock_server" {
 
 }
 
-data "template_file" "docker_compose" {
+data "template_file" "mock_server_service" {
   template = <<-EOF
 
-version: '3'
-
-services:
-  mock:
-    build:
-      context: ${local.mock-server-docker-filepath}
-      args:
-        http_proxy:
-        https_proxy:
-    restart: always
-    ports:
-      - 8083:3000
-
-  EOF
-}
-
-data "template_file" "http_proxy_conf" {
-  template = <<-EOF
-
-# See
-# https://docs.docker.jp/config/daemon/systemd.html#http-https
+[Unit]
+Description ="Mock Server for lerna-sample-payment-app"
+After = network.target
 
 [Service]
-${var.http_proxy_host != ""
-  ? "Environment=\"HTTP_PROXY=http://${var.http_proxy_host}:${var.http_proxy_port}\""
-  : ""
-  }
-${var.http_proxy_host != ""
-  ? "Environment=\"HTTPS_PROXY=http://${var.http_proxy_host}:${var.http_proxy_port}\""
-  : ""
-}
-Environment="NO_PROXY=localhost"
+Type = simple
+WorkingDirectory = ${local.mock-server-docker-filepath}
+ExecStartPre = /usr/bin/npm install
+ExecStart = /usr/bin/npm start -- --host '0.0.0.0' --port 8083
+Restart = always
+RestartSec = 3
 
-  EOF
+[Install]
+WantedBy = multi-user.target
+
+EOF
 }
