@@ -39,6 +39,7 @@ resource "null_resource" "setup_for_mock_server" {
     sudo -E yum install -y nodejs
 
     sudo --askpass install --owner=root --group=lv4 --mode=0664 /tmp/mock-server.service /usr/lib/systemd/system/mock-server.service
+    sudo systemctl daemon-reload
     sudo systemctl restart mock-server
     sudo systemctl enable mock-server
 
