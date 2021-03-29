@@ -62,7 +62,6 @@ Type = simple
 WorkingDirectory = ${local.mock-server-docker-filepath}
 ExecStartPre = /usr/bin/npm install
 ExecStart = /usr/bin/npm start -- --host '0.0.0.0' --port 8083
-ExecStop = /usr/bin/npm stop
 Restart = always
 RestartSec = 3
 
