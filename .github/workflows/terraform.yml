@@ -1,0 +1,38 @@
+name: 'Terraform'
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    # Install packages
+    - name: Install packages
+      run: sudo apt-get update && sudo apt-get install -y gawk
+
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 0.14.3
+        # terraform_wrapper could not handle STDIN
+        terraform_wrapper: false
+
+    # Checks that all Terraform configuration files, variables, and variable examples are properly formatted.
+    - name: Check Format
+      run: ./bin/check.sh
