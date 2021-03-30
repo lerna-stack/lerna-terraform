@@ -1,5 +1,5 @@
 module "core" {
-  source = "github.com/lerna-stack/lerna-terraform//modules/service/centos/core?ref=v1.0.0"
+  source = "github.com/lerna-stack/lerna-terraform//modules/service/redhat/core?ref=v1.1.0"
 
   # 有効にするテナント
   //active_tenants = ["default"]
@@ -108,6 +108,9 @@ module "core" {
 
   # アプリのヒープダンプや JVM の致命的エラーログファイルをダンプする場所。デフォルトは sbt-native-packager デフォルトのログディレクトリ。https://sbt-native-packager.readthedocs.io/en/latest/archetypes/cheatsheet.html?highlight=defaultLinuxLogsLocation#settings
   //app_dump_dir = "/var/log"
+
+  # アプリ停止のタイムアウト値
+  //app_stop_timeout_sec = "5min"
 
   # プロジェクト特有のアプリケーションの起動引数。リストの index は app_cluster_hosts と対応し、設定が app_cluster_hosts と対応する各サーバーに配置されます
   //app_arguments = []

@@ -5,8 +5,15 @@ lerna-terraform に関する注目すべき変更はこのファイルで文書�
 このファイルの書き方については [変更履歴の書き方](docs/dev/変更履歴の書き方.md) を参照してください。
 
 ## Unreleased
-- Red Hat Enterprise Linux 7 (RHEL7) に対応する
-  - [RedHatEnterpriseLinux7利用ガイド](docs/dev/RedHatEnterpriseLinux7利用ガイド.md)
+
+## v1.1.0
+- モジュール名を変更します  
+  `service/centos/core` を `service/redhat/core` に変更します。
+  `service/centos/dev` を `service/redhat/dev` に変更します。  
+  v1.0.0を利用している場合は移行作業が必要になります。  
+  詳細は [マイグレーションガイド v1.1.0 from v1.0.0](MIGRATION.md#v110-from-v100) をご確認ください。
+- Red Hat Enterprise Linux 7 (RHEL7) に対応します  
+  利用方法は [RedHatEnterpriseLinux7利用ガイド](docs/dev/RedHatEnterpriseLinux7利用ガイド.md) をご確認ください。
 - アプリ停止のタイムアウト値を設定可能にします  
   `app_stop_timeout_sec` で設定できます。  
   アプリケーションのグレースフルシャットダウンよりも十分な時間にするため、  
