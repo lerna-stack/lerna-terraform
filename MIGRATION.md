@@ -1,6 +1,6 @@
 # マイグレーションガイド
 
-## (未リリース) To v2.0.0 From v1.0.0
+## v1.1.0 from v1.0.0
 
 ### モジュール名の変更
 
@@ -22,8 +22,8 @@ module "your-module-name" {
     // v1.0.0
     // source = "github.com/lerna-stack/lerna-terraform//modules/service/centos/core?ref=v1.0.0"
 
-    // v2.0.0
-    source = "github.com/lerna-stack/lerna-terraform//modules/service/redhat/core?ref=v2.0.0"
+    // v1.1.0
+    source = "github.com/lerna-stack/lerna-terraform//modules/service/redhat/core?ref=v1.1.0"
 
     // ... truncated ...
 }
@@ -33,8 +33,8 @@ module "your-module-name" {
     // v1.0.0
     // source = "github.com/lerna-stack/lerna-terraform//modules/service/centos/dev?ref=v1.0.0"
 
-    // v2.0.0
-    source = "github.com/lerna-stack/lerna-terraform//modules/service/redhat/dev?ref=v2.0.0"
+    // v1.1.0
+    source = "github.com/lerna-stack/lerna-terraform//modules/service/redhat/dev?ref=v1.1.0"
 
     // ... truncated ...
 }
