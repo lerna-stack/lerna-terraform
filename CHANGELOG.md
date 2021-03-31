@@ -27,6 +27,8 @@ lerna-terraform に関する注目すべき変更はこのファイルで文書�
       詳細は [Cassandraバックアップ](docs/ops/Cassandraバックアップ.md) をご確認ください。
     - バックアップとリストアの手順を変更します  
       詳細は [Cassandraバックアップ](docs/ops/Cassandraバックアップ.md) と [Cassandraリストア](docs/ops/Cassandraリストア.md) をご確認ください。
+- ネットワーク分断時、HAProxyが切り離されない問題を修正します  
+  ネットワーク分断時にはマイノリティ側ではアプリが全滅する。その際、HAProxyは転送先がないが Keepalived からのヘルスチェックに OK を返すため Keepalived に切り離されず、エラーの原因となっていた。
 
 ## v1.0.0
 初回リリース
