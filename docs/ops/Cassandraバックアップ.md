@@ -88,4 +88,4 @@ total 16
 [redhat/core]: /modules/service/redhat/core
 [examples/aws_ec2]: /examples/aws_ec2
 [facility-cassandra-backup.tf]: /examples/aws_ec2/facility-cassandra-backup.tf
-[Cassandraバックアップ方式]: /docs/dev/Cassandraバックアップ方式
+[Cassandraバックアップ方式]: /docs/dev/Cassandraバックアップ方式.md
