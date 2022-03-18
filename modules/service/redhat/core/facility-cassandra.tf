@@ -182,11 +182,10 @@ data "template_file" "cassandra_service" {
   After=network.target
 
   [Service]
-  PIDFile=/var/run/cassandra/cassandra.pid
   User=cassandra
   Group=cassandra
   Environment="JAVA_HOME=${var.cassandra_java_home}"
-  ExecStart=/usr/sbin/cassandra -f -p /var/run/cassandra/cassandra.pid
+  ExecStart=/usr/sbin/cassandra -f
   StandardOutput=journal
   StandardError=journal
   LimitNOFILE=1048576
